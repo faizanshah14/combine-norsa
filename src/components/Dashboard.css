@@ -1,0 +1,30 @@
+.add-btn{
+  background-color: #3AAB7B;
+  border: 1px solid #3AAB7B;
+  padding: 6px 12px;
+  border-radius: 3px;
+  color: #ffffff;
+}
+
+.delete-btn{
+  background-color:#C82333;
+  border: 1px solid #C82333;
+  padding: 6px 12px;
+  border-radius: 3px;
+  color: #ffffff;
+}
+
+.radio-div{
+  display: flex;
+  flex-direction: column;  
+}
+
+.form-wrapper{
+  background-color: transparent;
+  border: none;
+  border-radius: 10px;
+  padding-bottom: 50px;
+  padding-left: 50px;
+  padding-right: 50px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
