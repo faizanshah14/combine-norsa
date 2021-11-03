@@ -151,8 +151,7 @@ function MerchantTypeList() {
                     <tr>
                       <th className="border-0"> st </th>
                       <th className="border-0">Title</th>
-                      <th className="border-0">Status</th>
-                      <th className="border-0" align="center">
+                      <th className="border-0">
                         Actions
                       </th>
                     </tr>

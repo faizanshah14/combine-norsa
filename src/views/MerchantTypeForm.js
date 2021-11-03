@@ -76,12 +76,14 @@ function MerchantTypeForm() {
       }
       return "only alphabets and spaces";
     }
-    if (name === "NumberOfMonths" || name === "Interest") {
-      let pattern = new RegExp("^[0-9]*$");
-      if (pattern.test(value)) {
-        return true;
+    if (name === "Interest") {
+      if (value > 100 || value < 0)
+        return "cannot be greater than 100% or less than 0%";
+    }
+    if (name == "NumberOfMonths") {
+      if (value < 0) {
+        return "Months must be greater than 1"
       }
-      return "only numbers";
     }
     return true;
   };
@@ -206,7 +208,7 @@ function MerchantTypeForm() {
                             <Form.Control
                               required
                               placeholder="Month"
-                              type="text"
+                              type="number"
                               value={item.NumberOfMonths}
                               name="NumberOfMonths"
                               key={index}
@@ -225,7 +227,7 @@ function MerchantTypeForm() {
                             <Form.Control
                               required
                               placeholder="Interest"
-                              type="text"
+                              type="number"
                               value={item.Interest}
                               name="Interest"
                               key={index}
