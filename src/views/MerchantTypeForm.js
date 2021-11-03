@@ -16,39 +16,58 @@ import { useHistory, Link } from "react-router-dom";
 import { useEffect } from "react";
 import "../components/Dashboard.css";
 import { getMerchantTypeData } from "services/merchantType";
+import { getMerchantTypeDiscountByMerchantType_id } from "services/merchantType";
+import { updateMerchantType } from "services/merchantType";
+import { updateMerchantTypeDiscount } from "services/merchantType";
+import _uniqueId from 'lodash/uniqueId';
+import { addMerchantType } from "services/merchantType";
+import { getMerchantData } from "services/merchant";
+import { addMerchantTypeDiscount } from "services/merchantType";
 
 function MerchantTypeForm() {
   const history = useHistory();
   const queryParams = new URLSearchParams(window.location.search);
   const [ClientID, setClientID] = React.useState();
   const [validated, setValidated] = React.useState(false);
+  const [uniqueID] = React.useState(_uniqueId("prefix-"))
+  const [uniqueIDFormData] = React.useState(_uniqueId("prefix-"))
   const [formData, setFormData] = React.useState({
     id: "",
     Title: "",
-    monthsAndInterest: [{ Months: "4", Interest: "5" }],
+
   });
+  const [discountFormData, setDiscountFormData] = React.useState([])
   useEffect(() => {
     const params = queryParams.get("id");
     if (params != null) {
       setClientID(params);
     } else {
       setClientID(null);
+      setFormData({ id: uniqueIDFormData, Title: "" })
     }
   }, []);
 
   useEffect(() => {
-    if(ClientID == null) return 
+    if (ClientID == null) return
     getMerchantTypeData(ClientID)
       .then(function (response) {
         console.log(response);
         setFormData(response.data)
+        getMerchantTypeDiscountByMerchantType_id(response.data.id)
+          .then(function (response) {
+
+            setDiscountFormData(response.data)
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
       })
       .catch(function (error) {
         console.log("cannot fetch the data with an " + error);
       });
 
   }, [ClientID]);
-  const { id, Title, monthsAndInterest } = formData;
+  const { id, Title, NumberOfMonthsAndInterest } = formData;
   const validateInput = (name, value) => {
     if (name === "Title") {
       let pattern = new RegExp("^[a-zA-Z ]*$");
@@ -57,7 +76,7 @@ function MerchantTypeForm() {
       }
       return "only alphabets and spaces";
     }
-    if (name === "Months" || name === "Interest") {
+    if (name === "NumberOfMonths" || name === "Interest") {
       let pattern = new RegExp("^[0-9]*$");
       if (pattern.test(value)) {
         return true;
@@ -74,41 +93,77 @@ function MerchantTypeForm() {
       return;
     }
 
-    setFormData({ ...formData, [e.target.name]: [e.target.value] });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-  const handleMonthsAndInterest = (e, index) => {
+  const handleNumberOfMonthsAndInterest = (e, index) => {
     const valid = validateInput(e.target.name, e.target.value);
     if (valid != true) {
       alert(valid);
       return;
     }
-    if (e.target.name === "Months") {
-      let temp = [...monthsAndInterest];
+    let temp = [...discountFormData]
+    if (e.target.name === "NumberOfMonths") {
       temp[index] = {
+        id: temp[index].id,
         Interest: temp[index].Interest,
-        [e.target.name]: [e.target.value],
-      };
-      setFormData({ ...formData, monthsAndInterest: temp });
-    } else {
-      let temp = [...monthsAndInterest];
+        [e.target.name]: parseInt(e.target.value),
+        MerchantType_id: temp[index].MerchantType_id
+      }
+      setDiscountFormData(temp)
+    }
+    else {
       temp[index] = {
-        Months: temp[index].Months,
-        [e.target.name]: [e.target.value],
+        id: temp[index].id,
+        NumberOfMonths: temp[index].NumberOfMonths,
+        [e.target.name]: parseInt(e.target.value),
+        MerchantType_id: temp[index].MerchantType_id
       };
-      setFormData({ ...formData, monthsAndInterest: temp });
+      setDiscountFormData(temp)
     }
   };
   const handleSubmit = (event) => {
     event.preventDefault();
+    if (ClientID) {
+      updateMerchantType(formData)
+        .then(function (response) {
+          discountFormData.map((item) => {
+            updateMerchantTypeDiscount(item)
+              .then(function (response) {
+                console.log(response)
+              })
+              .catch(function (error) {
+                console.log(error)
+              })
+          })
+
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+    }
+    else {
+      addMerchantType(formData)
+        .then(function (response) {
+          discountFormData.map((item) => {
+            addMerchantTypeDiscount(item)
+              .then(function (response) {
+                console.log(response)
+              })
+              .catch(function (error) {
+                console.log(error)
+              })
+          })
+        })
+        .catch(function (error) {
+          console.log(error)
+          console.log(error.message)
+        })
+    }
 
     history.push("/admin/MerchantTypeList");
-    alert("i am submitted");
   };
   const handleRow = () => {
-    setFormData({
-      ...formData,
-      monthsAndInterest: [...monthsAndInterest, { Months: "", Interest: "" }],
-    });
+    setDiscountFormData([...discountFormData, { id: uniqueID, NumberOfMonths: 0, Interest: 0, MerchantType_id: formData.id }])
   };
 
   return (
@@ -142,21 +197,21 @@ function MerchantTypeForm() {
                       </Form.Group>
                     </Col>
                   </Row>
-                  {monthsAndInterest.map((item, index) => {
+                  {discountFormData.map((item, index) => {
                     return (
                       <Row>
                         <Col className="pr-1" md="6">
                           <Form.Group>
-                            <label>Months</label>
+                            <label>Number Of Months</label>
                             <Form.Control
                               required
                               placeholder="Month"
                               type="text"
-                              value={item.Months}
-                              name="Months"
+                              value={item.NumberOfMonths}
+                              name="NumberOfMonths"
                               key={index}
                               onChange={(e) =>
-                                handleMonthsAndInterest(e, index)
+                                handleNumberOfMonthsAndInterest(e, index)
                               }
                             ></Form.Control>
                             <Form.Control.Feedback type="invalid">
@@ -175,7 +230,7 @@ function MerchantTypeForm() {
                               name="Interest"
                               key={index}
                               onChange={(e) =>
-                                handleMonthsAndInterest(e, index)
+                                handleNumberOfMonthsAndInterest(e, index)
                               }
                             ></Form.Control>
                             <Form.Control.Feedback type="invalid">

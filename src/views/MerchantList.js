@@ -199,8 +199,6 @@ function MerchantList() {
                           <td> {item.Name} </td>
                           <td> {item.AccountNo} </td>
                           <td> {item.BankName} </td>
-
-
                           <td>
                             <i
                               className="fa fa-edit"

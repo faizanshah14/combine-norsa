@@ -25,12 +25,35 @@ export function getMerchantTypeData(id) {
         }
     })
 }
+export function getMerchantTypeDiscountByMerchantType_id(MerchantType_id) {
+    const token = getToken()
+    if (!token) return "Authentication Fail Sign In agian"
 
+    return axios.get(address+'/api/merchants/getMerchantTypeDiscountByMerchantType_id/' + MerchantType_id, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+        }
+    })
+}
 export function updateMerchantType(formData) {
     const token = getToken()
     if (!token) return "Authentication Fail Sign In agian"
 
     return axios.post(address+'/api/merchants/upsertMerchantType', formData, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+        }
+    })
+}
+
+export function updateMerchantTypeDiscount(formData) {
+    console.log(formData)
+    const token = getToken()
+    if (!token) return "Authentication Fail Sign In agian"
+
+    return axios.post(address+'/api/merchants/upsertMerchantTypeDiscount', formData, {
         headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + token
@@ -51,7 +74,33 @@ export function addMerchantType(formData) {
     })
 }
 
+export function addMerchantTypeDiscount(formData) {
+    console.log(formData)
+    const token = getToken()
+    if (!token) return "Authentication Fail Sign In agian"
+
+    return axios.post(address+'/api/merchants/createMerchantTypeDiscount', formData, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+        }
+    })
+}
+
 export function deleteMerchantType(id) {
+    alert(id)
+    const token = getToken()
+    if (!token) return "Authentication Fail Sign In agian"
+
+    return axios.delete(address + '/api/merchants/deleteMerchantType/'+ id, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+        }
+    })
+}
+
+export function deleteMerchantTypeDiscount(id) {
     alert(id)
     const token = getToken()
     if (!token) return "Authentication Fail Sign In agian"

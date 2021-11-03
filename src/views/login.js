@@ -47,7 +47,7 @@ const LoginForm = (props) => {
   useEffect(() => {
     const storage = window.localStorage;
     const token = storage.getItem("token")
-    if(token){
+    if(!token){
       history.push('/admin/dashboard');
     }
   }, [])
@@ -146,22 +146,7 @@ const LoginForm = (props) => {
               {submitting ? 'Signing in...' : 'Sign In'}
             </Button>
           </Box>
-          <Box >
-            <Button
-              onClick={() => { history.push("/register") }}
-              disabled={submitting}
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="secondary"
-              className={classes.submit}
-            >
-              {submitting && (
-                <CircularProgress size={24} className={classes.buttonProgress} />
-              )}
-              {submitting ? 'Register New User...' : 'Regitser New User'}
-            </Button>
-          </Box>
+          
         </form>
       </Paper>
     </main>

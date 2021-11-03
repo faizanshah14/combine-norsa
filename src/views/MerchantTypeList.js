@@ -16,12 +16,12 @@ import {
 import { useHistory } from 'react-router-dom';
 import { useEffect } from "react";
 import getMerchantTypeList from "services/merchantType";
-import {deleteMerchantType} from "services/merchantType"
+import { deleteMerchantType } from "services/merchantType"
 
 function MerchantTypeList() {
   const [tableData, setTableData] = React.useState([{
     Checked: false,
-    id : "",
+    id: "",
     Title: ""
   }])
   const history = useHistory();
@@ -95,14 +95,22 @@ function MerchantTypeList() {
   }
 
   const deleteRow = (itemToDelete) => {
-    deleteMerchantType(tableData[itemToDelete].id)
-    .then(function (response) {
-      console.log(response)
-    })
-    .catch(function (error) {
-      console.log(error)
-      console.log(error.message)
-    })
+    deleteMerchantTypeDiscount()
+      .then(function (response) {
+        deleteMerchantType(tableData[itemToDelete].id)
+          .then(function (response) {
+            console.log(response)
+          })
+          .catch(function (error) {
+            console.log(error)
+            console.log(error.message)
+          })
+      })
+      .catch(function (error) {
+        console.log(error)
+        console.log(error.message)
+      })
+
     setTableData(tableData.filter((item, index) => index !== itemToDelete))
   }
 
