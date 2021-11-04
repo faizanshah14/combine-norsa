@@ -171,7 +171,7 @@ function MerchantList() {
                       <th className="border-0">Code Negoshi</th>
                       <th className="border-0">Nomber Negoshi</th>
                       <th className="border-0">Rekening</th>
-                      <th className="border-0">Bank</th>
+                      <th className="border-0">BankO</th>
                       <th className="border-0">Actions</th>
                     </tr>
                   </thead>

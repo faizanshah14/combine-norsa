@@ -38,6 +38,8 @@ const Register = () => {
       .catch((error) => {
         console.error("error message", error.message);
       });
+
+      
   }, []);
 
   useEffect(() => {

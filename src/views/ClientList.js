@@ -135,7 +135,7 @@ function ClientList() {
           <Col md="12">
             <Card className="card-plain table-plain-bg">
               <Card.Header>
-                <Card.Title as="h3">Code di Kliente</Card.Title>
+                <Card.Title as="h3">LISTA di Kliente</Card.Title>
               </Card.Header>
               <Card.Body className="table-full-width table-responsive px-0">
                 <Button

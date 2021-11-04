@@ -41,7 +41,6 @@ function IssuanceCardForm() {
     NfcCard_id: "",
     Merchants_id: "",
     id: "",
-    status: "",
   });
   const {
     DateTime,
@@ -312,22 +311,7 @@ function IssuanceCardForm() {
                       </Form.Group>
                     </Col>
                   </Row>
-                  <Row>
-                    <Col className="pr-1" md="12">
-                      <Form.Check
-                        inline
-                        label="Active"
-                        name="group1"
-                        type="Radio"
-                        className="mr-5"
-                        name="status"
-                        checked={status}
-                        onClick={(e) => {
-                          handleInputChange(e);
-                        }}
-                      />
-                    </Col>
-                  </Row>
+                  
                   <Row className="text-center mt-2">
                     <Col md="12">
                       <Button
