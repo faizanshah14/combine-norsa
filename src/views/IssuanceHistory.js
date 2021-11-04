@@ -15,15 +15,52 @@ import {
 } from "react-bootstrap";
 import { useHistory } from 'react-router-dom';
 import { useEffect } from "react";
+import { getIssuanceHistoryList } from "services/issuanceHistory";
+import { getMerchantData } from "services/merchant";
+import { getClientData } from "services/client";
 
 function IssuanceHistory() {
   const [tableData, setTableData] = React.useState([{
-    id: "", Client_id: "", Amount: "", PaybackPeriod: "", NfcCard_id: "", Merchants_id: "",
+    DateTime: "",
+    Amount: "",
+    PaybackPeriod: "",
+    Client_id: "",
+    NfcCard_id: "",
+    Merchants_id: "",
+    id: "",
+    status: "",
   }])
+
   const history = useHistory();
   const [status, setStatus] = React.useState(false)
 
   useEffect(() => {
+    getIssuanceHistoryList()
+      .then(async function (response) {
+        let tempData = response.data
+        await tempData.map((item, index) => {
+           getMerchantData(item.Merchants_id)
+            .then(function (response) {
+              tempData[index].Merchants_id = response.data.Name
+            })
+            .catch(function (error){
+ 
+            })
+           getClientData(item.Client_id)
+            .then(function (response) {
+              temp[index].Client_id = response.data.Code
+            })
+            .catch(function (error) {
+
+            })
+          
+        })
+        console.log(tempData)
+        setTableData(tempData)
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
     // setTableData([{
     //   Code: "1", FirstName: "shaffan", LastName: "nasir", WorkNo: "none", ContactNo: "0332", WorksAt: "Fast", Email: "shaffan@gmail.com",
     //   FaxNumber: "None", Fax: "None", Status: false, MaxBorrowAmount: "100", Dealer_id: "1",
