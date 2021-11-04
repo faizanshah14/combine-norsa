@@ -10,6 +10,8 @@ import {
   Row,
   Col,
 } from "react-bootstrap";
+import { getToken } from "../services/auth";
+import address from "../services/address";
 
 const NfcCard = () => {
   const [nfcData, setNfcData] = useState([]);
@@ -24,13 +26,19 @@ const NfcCard = () => {
       return
     }
     axios
-      .get(`https://jsonplaceholder.typicode.com/users`)
+      .get(`${address}/api/nfcCard/getAllNfcCards`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+      })
       .then((res) => {
         const users = res.data;
+        console.log(users, "userrrr");
         setNfcData(users);
       })
       .catch((error) => {
-        console.error("There is an error!", error);
+        console.error("error message", error.message);
       });
   }, []);
 
@@ -43,7 +51,7 @@ const NfcCard = () => {
     const value = e.target.value;
     if (value.length >= 1) {
       result = nfcData.filter((character) => {
-        return character.name.toLowerCase().startsWith(value.toLowerCase());
+        return character.number.toLowerCase().startsWith(value.toLowerCase());
       });
       setFilteredData(result);
     } else {
@@ -58,8 +66,15 @@ const NfcCard = () => {
   };
 
   const onDelete = (index) => {
+    const token = getToken();
     axios
-      .delete(`https://jsonplaceholder.typicode.com/users/${index}`)
+      .delete(
+        `${address}/api/nfcCard/deleteNfcCard/${index}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+      })
       .then((res) => {
         const persons = res.data;
         console.log(persons, "deleted data");
@@ -86,7 +101,7 @@ const NfcCard = () => {
                     backgroundColor: "#3AAB7B",
                     border: "1px solid #3AAB7B",
                   }}
-                  onClick={() => history.push("/admin/addnfccard")}
+                  onClick={() => history.push("/admin/addnfccard/:id")}
                 >
                   ADD
                 </Button>
@@ -141,7 +156,7 @@ const NfcCard = () => {
                     <tr>
                       <th className="border-0 "> st </th>
                       <th className="border-0 ">Serial No</th>
-                      <th className="border-0 ">Number</th>
+                      <th className="border-0 ">Nomber</th>
                       <th className="border-0 ">Status</th>
                       <th className="border-0 ">Actions</th>
                     </tr>
@@ -164,7 +179,7 @@ const NfcCard = () => {
                             ></Form.Control>
                           </td>
                           <td> {index + 1} </td>
-                          <td> {item.name} </td>
+                          <td> {item.number} </td>
                           <td>
                             {item.Status ? (
                               <Button onClick={() => toggleStatus(index)}>
@@ -190,7 +205,7 @@ const NfcCard = () => {
                               className="fa fa-edit mr-3"
                               style={{ color: "green" }}
                               onClick={() =>
-                                history.push("/admin/addnfccard/?id=" + item.id)
+                                history.push(`/admin/addnfccard/${item.id}`)
                               }
                             />
                             <i

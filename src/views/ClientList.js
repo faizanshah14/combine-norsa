@@ -135,7 +135,7 @@ function ClientList() {
           <Col md="12">
             <Card className="card-plain table-plain-bg">
               <Card.Header>
-                <Card.Title as="h3">Kliente</Card.Title>
+                <Card.Title as="h3">Code di Kliente</Card.Title>
               </Card.Header>
               <Card.Body className="table-full-width table-responsive px-0">
                 <Button
@@ -218,7 +218,7 @@ function ClientList() {
                       <th className="border-0">Nomber</th>
                       <th className="border-0">Fam</th>
                       <th className="border-0">Email</th>
-                      <th className="border-0">Tell Celluar</th>
+                      <th className="border-0">Celullar</th>
                       <th className="border-0">Ta taraha na</th>
                       <th className="border-0">Fax</th>
                       <th className="border-0">Kredito Maksimo</th>

@@ -201,7 +201,7 @@ function IssuanceCardForm() {
                   <Row>
                     <Col className="pr-1" md="6">
                       <Form.Group>
-                        <label htmlFor="exampleLastName">Clinet Code</label>
+                        <label htmlFor="exampleLastName">Client Code</label>
                         <Form.Control
                           as="select"
                           value={ClientID}

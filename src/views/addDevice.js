@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useHistory, useParams } from "react-router-dom";
 import { Button, Form } from "react-bootstrap";
 import "../components/Dashboard.css";
 
@@ -9,31 +9,101 @@ const addDevice = () => {
     id: "",
     nameNumber: "",
     batteryStatus: "",
-    status: "",
-    // checked: false,
+    status: "active",
   });
+
+  const [updateData, setUpdateData] = useState([]);
 
   const history = useHistory();
 
-  const onChnageHandler = (e) => {
+  const { id } = useParams();
+  console.log(id, "id");
+
+  const onChangeHandler = (e) => {
     setInputDeviceData({ ...inputdeviceData, [e.target.name]: e.target.value });
   };
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    console.log(token, "add form token");
+    axios
+      .get("https://norsabackend.herokuapp.com/api/api/device/getAllDevices", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer" + token,
+        },
+      })
+      .then((res) => {
+        const users = res.data;
+        setUpdateData(users);
+        console.log(users, "form get data");
+      })
+      .catch((error) => {
+        console.error("There is an error!", error);
+      });
+  }, []);
+
+  useEffect(() => {
+    const filteredData = updateData?.find((arr) => arr.id === parseInt(id));
+    setInputDeviceData({ ...filteredData });
+    // eslint-disable-next-line
+  }, [id, updateData]);
+
   const onSubmitHandler = (e) => {
     e.preventDefault();
-    history.push("/admin/device");
+    const token = localStorage.getItem("token");
+
     const newuser = {
-      // id: inputdeviceData.id,
-      // nameNumber: inputdeviceData.nameNumber,
-      // batteryStatus: inputdeviceData.batteryStatus,
-      // status: inputdeviceData.status,
+      id: inputdeviceData.id,
+      nameNumber: inputdeviceData.nameNumber,
+      batteryStatus: inputdeviceData.batteryStatus,
+      status: inputdeviceData.status,
     };
-    axios
-      .post(`https://jsonplaceholder.typicode.com/users`, { newuser })
-      .then((res) => {
-        console.log(res);
-        console.log(res.data);
-      });
+
+    const edituser = {
+      id: inputdeviceData.id,
+      nameNumber: inputdeviceData.nameNumber,
+      batteryStatus: inputdeviceData.batteryStatus,
+      status: inputdeviceData.status,
+    };
+
+    if (inputdeviceData?.id) {
+      axios
+        .post(
+          `https://norsabackend.herokuapp.com/api/device/upsertDevice`,
+          {
+            edituser,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer" + token,
+            },
+          }
+        )
+        .then((res) => {
+          console.log(res);
+          console.log(res.data);
+        });
+    } else {
+      axios
+        .post(
+          `https://norsabackend.herokuapp.com/api/device/createDevice`,
+          {
+            newuser,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer" + token,
+            },
+          }
+        )
+        .then((res) => {
+          console.log(res);
+          console.log(res.data);
+        });
+    }
   };
 
   return (
@@ -48,7 +118,7 @@ const addDevice = () => {
             <h3 className="text-center m-5">Device</h3>
             <div className="form-row">
               <div className="form-group col-md-12">
-                <label for="namenumber">Name Number</label>
+                <label for="namenumber">Device Name</label>
                 <input
                   type="text"
                   className="form-control"
@@ -57,7 +127,7 @@ const addDevice = () => {
                   name="nameNumber"
                   value={inputdeviceData.nameNumber}
                   onChange={(e) => onChnageHandler(e)}
-                  pattern="[a-zA-Z0-9_.-]+"
+                  pattern="[a-zA-Z0-9_.- ]+"
                   required
                 />
               </div>
@@ -71,7 +141,7 @@ const addDevice = () => {
                   name="batteryStatus"
                   value={inputdeviceData.batteryStatus}
                   onChange={(e) => onChnageHandler(e)}
-                  pattern="[a-zA-Z0-9_.-]+"
+                  pattern="[a-zA-Z0-9_.- ]+"
                   required
                 />
               </div>
@@ -83,12 +153,14 @@ const addDevice = () => {
               <div>
                 <Form.Check
                   inline
-                  label="Active"
-                  name="group1"
-                  type="Radio"
                   className="mr-5"
+                  label="Active"
+                  type="Radio"
+                  checked={inputdeviceData.status === "active"}
+                  name="status"
+                  value={inputdeviceData.status}
+                  onChange={onChangeHandler}
                 />
-                <Form.Check inline label="Block" name="group1" type="Radio" />
               </div>
             </div>
             <div className="mt-5 text-center">

@@ -18,16 +18,24 @@ const Register = () => {
   const history = useHistory();
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    console.log(token, "tokennn");
     axios
-      .get(`https://jsonplaceholder.typicode.com/users`)
+      .get("https://norsabackend.herokuapp.com/.....", {
+        headers: {
+          Authorization: `Bearer  ${token}`,
+        },
+      })
       .then((res) => {
         const users = res.data;
+        console.log(users, "userrrr");
         setRegisterData(users);
       })
       .catch((error) => {
-        console.error("There is an error!", error);
+        console.error("error message", error.message);
       });
   }, []);
+
 
   useEffect(() => {
     if (registerData.length) setFilteredData(registerData);
@@ -71,7 +79,7 @@ const Register = () => {
           <Col md="12">
             <Card className="card-plain table-plain-bg">
               <Card.Header>
-                <Card.Title as="h3">Register</Card.Title>
+                <Card.Title as="h3">Usuarionan</Card.Title>
               </Card.Header>
               <Card.Body className="table-full-width table-responsive px-0">
                 <Button
@@ -136,8 +144,6 @@ const Register = () => {
                     <tr>
                       <th className="border-0 "> st </th>
                       <th className="border-0 ">Serial No</th>
-                      <th className="border-0 ">First Name</th>
-                      <th className="border-0 ">Last Name</th>
                       <th className="border-0 ">Email</th>
                       <th className="border-0 ">Status</th>
                     </tr>
@@ -160,8 +166,6 @@ const Register = () => {
                             ></Form.Control>
                           </td>
                           <td> {index + 1} </td>
-                          <td> {item.username} </td>
-                          <td> {item.name} </td>
                           <td> {item.email} </td>
                           <td>
                             {item.Status ? (
