@@ -15,15 +15,56 @@ import {
 } from "react-bootstrap";
 import { useHistory } from 'react-router-dom';
 import { useEffect } from "react";
+import { getIssuanceHistoryList } from "services/issuanceHistory";
+import { getMerchantData } from "services/merchant";
+import { getClientData } from "services/client";
 
 function IssuanceHistory() {
   const [tableData, setTableData] = React.useState([{
-    id: "", Client_id: "", Amount: "", PaybackPeriod: "", NfcCard_id: "", Merchants_id: "",
+    DateTime: "",
+    Amount: "",
+    PaybackPeriod: "",
+    Client_id: "",
+    NfcCard_id: "",
+    Merchants_id: "",
+    id: "",
+    status: "",
   }])
+
   const history = useHistory();
   const [status, setStatus] = React.useState(false)
 
   useEffect(() => {
+    getIssuanceHistoryList()
+      .then(async function (response) {
+        let tempData = response.data
+        setTableData(tempData.map((item, index) => {
+          let Merchants_id = ""
+          let Client_id = ""
+          getMerchantData(item.Merchants_id)
+            .then(function (response) {
+              Merchants_id = response.data.Name
+            })
+            .catch(function (error) {
+
+            })
+          getClientData(item.Client_id)
+            .then(function (response) {
+              Client_id = response.data.Code
+            })
+            .catch(function (error) {
+
+            })
+
+          return { Merchants_id, Client_id }
+
+        }))
+        console.log(tempData)
+        setTableData(tempData)
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
     // setTableData([{
     //   Code: "1", FirstName: "shaffan", LastName: "nasir", WorkNo: "none", ContactNo: "0332", WorksAt: "Fast", Email: "shaffan@gmail.com",
     //   FaxNumber: "None", Fax: "None", Status: false, MaxBorrowAmount: "100", Dealer_id: "1",
@@ -69,7 +110,7 @@ function IssuanceHistory() {
                 <Card.Title as="h3">Issuance History</Card.Title>
               </Card.Header>
               <Card.Body className="table-full-width table-responsive px-0">
-                <Button
+                {/* <Button
                   className="btn-fill ml-3 mr-3"
                   type="submit"
                   style={{
@@ -93,7 +134,7 @@ function IssuanceHistory() {
                   variant="danger"
                 >
                   Block
-                </Button>
+                </Button> */}
                 <Table className="table-hover mt-3">
                   <thead>
                     <tr>
@@ -104,7 +145,7 @@ function IssuanceHistory() {
                       <th className="border-0">Periodo di Pago </th>
                       <th className="border-0">Nfc Card </th>
                       <th className="border-0">Negoshi</th>
-                      <th className="border-0">Actions</th>
+                      {/* <th className="border-0">Actions</th> */}
                     </tr>
                   </thead>
                   <tbody>
@@ -120,7 +161,7 @@ function IssuanceHistory() {
                           <td> {item.Merchants_id} </td>
 
 
-                          <td>
+                          {/* <td>
                             <i
                               className="fa fa-edit"
                               style={{ color: "green" }}
@@ -136,7 +177,7 @@ function IssuanceHistory() {
                                 deleteRow(index);
                               }}
                             />
-                          </td>
+                          </td> */}
                         </tr>
                       );
                     })}

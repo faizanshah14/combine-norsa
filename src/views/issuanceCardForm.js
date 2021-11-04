@@ -17,6 +17,11 @@ import getClientList from "services/client";
 import getMerchantList from "services/merchant";
 import { getMerchantTypeDiscountByMerchantType_id } from "services/merchantType";
 import { useEffect } from "react";
+import { getMerchantData } from "services/merchant";
+import { getNfcList } from "services/nfc";
+import addIssuanceHistory from "services/issuanceHistory";
+import _uniqueId from 'lodash/uniqueId';
+
 
 function IssuanceCardForm() {
   const history = useHistory();
@@ -26,13 +31,12 @@ function IssuanceCardForm() {
   const [allClients, setAllClients] = React.useState([])
   const [allNfcCards, setAllNfcCards] = React.useState([])
   const [allMerchants, setAllMerchants] = React.useState([])
+  const [uniqueID] = React.useState(_uniqueId("prefix-"))
   const [allPaybackPeriodsOfCurrentMerchant, setAllPaybackPeriodsOfCurrentMerchant] = React.useState([])
   const [formData, setFormData] = React.useState({
     DateTime: "",
     Amount: "",
     PaybackPeriod: "",
-    TypeOfPayment: "",
-    DateDeposit: null,
     Client_id: "",
     NfcCard_id: "",
     Merchants_id: "",
@@ -43,8 +47,6 @@ function IssuanceCardForm() {
     DateTime,
     Amount,
     PaybackPeriod,
-    TypeOfPayment,
-    DateDeposit,
     Client_id,
     NfcCard_id,
     Merchants_id,
@@ -57,7 +59,9 @@ function IssuanceCardForm() {
       setClientID(params);
     } else {
       setClientID(null);
+      setFormData({ ...formData, ["id"]: uniqueID })
     }
+
     getMerchantList().
       then(function (response) {
         console.log(response.data)
@@ -74,18 +78,32 @@ function IssuanceCardForm() {
       .catch(function (error) {
         console.log(error);
       })
+    getNfcList()
+      .then(function (response) {
+        setAllNfcCards(response.data)
+      })
+      .catch(function (error) {
+        console.log(error);
+      })
   }, []);
 
   useEffect(() => {
     if (Merchants_id.length < 1) return
-    getMerchantTypeDiscountByMerchantType_id(Merchants_id)
+    getMerchantData(Merchants_id)
       .then(function (response) {
-        console.log(response)
-        setAllPaybackPeriodsOfCurrentMerchant(response.data)
+        getMerchantTypeDiscountByMerchantType_id(response.data.MerchantType_id)
+          .then(function (response) {
+            console.log(response)
+            setAllPaybackPeriodsOfCurrentMerchant(response.data)
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
       })
       .catch(function (error) {
-        console.log(error)
-      })
+        console.log("cannot fetch the data with an " + error);
+      });
+
   }, [Merchants_id])
 
   useEffect(() => {
@@ -128,7 +146,7 @@ function IssuanceCardForm() {
       alert(valid);
       return;
     }
-    setFormData({ ...formData, [e.target.name]: [e.target.value] });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
   const validateEmail = (email) => {
     let pattern =
@@ -141,13 +159,15 @@ function IssuanceCardForm() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const valid = validateEmail(Email);
-    if (valid != true) {
-      alert(valid);
-      return;
-    }
+    console.log(formData)
+    addIssuanceHistory(formData)
+      .then(function (response) {
+        console.log(response)
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
     history.push("/admin/ClientList");
-    alert("i am submitted");
   };
 
   return (
@@ -204,8 +224,8 @@ function IssuanceCardForm() {
                         <label htmlFor="exampleLastName">Client Code</label>
                         <Form.Control
                           as="select"
-                          value={ClientID}
-                          name="ClientID"
+                          value={Client_id}
+                          name="Client_id"
                           onChange={e => {
                             handleInputChange(e)
                           }}
@@ -234,7 +254,7 @@ function IssuanceCardForm() {
                         >
                           {allNfcCards.map((item) => {
                             return (
-                              <option value={item.id}>{item.Number}</option>
+                              <option value={item.id}>{item.number}</option>
                             )
                           })}
                         </Form.Control>
@@ -290,6 +310,22 @@ function IssuanceCardForm() {
                           Please provide a value.
                         </Form.Control.Feedback>
                       </Form.Group>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col className="pr-1" md="12">
+                      <Form.Check
+                        inline
+                        label="Active"
+                        name="group1"
+                        type="Radio"
+                        className="mr-5"
+                        name="status"
+                        checked={status}
+                        onClick={(e) => {
+                          handleInputChange(e);
+                        }}
+                      />
                     </Col>
                   </Row>
                   <Row className="text-center mt-2">
