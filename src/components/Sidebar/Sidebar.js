@@ -54,7 +54,7 @@ function Sidebar({ color, image, routes }) {
         <Nav>
           {routes.map((prop, key) => {
             if (!prop.redirect)
-              if (prop.path.includes("add") || (prop.path.includes("Form") && !prop.path.includes("Card")) || prop.path.includes("History")) return
+              if (prop.path.includes("add") || (prop.path.includes("Form") && !prop.path.includes("Card")) || prop.path.includes("History") || prop.path.includes("PendingPaymentList")) return
             return (
               <li
                 className={

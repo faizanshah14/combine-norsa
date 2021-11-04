@@ -3,6 +3,8 @@ import axios from "axios";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { Button, Form } from "react-bootstrap";
 import "../components/Dashboard.css";
+import checkUser from "services/auth";
+
 
 const addDevice = () => {
   const [inputdeviceData, setInputDeviceData] = useState({
@@ -24,6 +26,10 @@ const addDevice = () => {
   };
 
   useEffect(() => {
+    if (!checkUser()) {
+      history.push('/login')
+      return;
+    }
     const token = localStorage.getItem("token");
     console.log(token, "add form token");
     axios

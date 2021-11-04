@@ -7,6 +7,8 @@ import address from "../services/address";
 import _uniqueId from "lodash/uniqueId";
 import addNfc from "services/nfc";
 import "../components/Dashboard.css";
+import checkUser from "services/auth";
+
 
 const addNfcCard = () => {
   const [inputnfcData, setInputNfcData] = useState({
@@ -22,6 +24,10 @@ const addNfcCard = () => {
   const { id } = useParams();
 
   useEffect(() => {
+    if (!checkUser()) {
+      history.push('/login')
+      return;
+    }
     setInputNfcData({ ...inputnfcData, ["id"]: uniqueID });
   }, []);
 
