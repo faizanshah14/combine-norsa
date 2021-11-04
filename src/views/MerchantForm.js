@@ -161,7 +161,7 @@ function MerchantForm() {
                   <Row>
                     <Col className="pr-1" md="6">
                       <Form.Group>
-                        <label>Account Number</label>
+                        <label>Account Nomber</label>
                         <Form.Control
                           required
                           placeholder="Last Name"
@@ -177,7 +177,7 @@ function MerchantForm() {
                     </Col>
                     <Col className="pr-1" md="6">
                       <Form.Group>
-                        <label>Bank Nomber</label>
+                        <label>Banko</label>
                         <Form.Control
                           required
                           placeholder="00-0000-00"

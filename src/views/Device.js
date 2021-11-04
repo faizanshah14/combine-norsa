@@ -10,6 +10,9 @@ import {
   Row,
   Col,
 } from "react-bootstrap";
+import { getToken } from "../services/auth";
+import address from "../services/address";
+
 
 const Device = () => {
   const [deviceData, setDeviceData] = useState([]);
@@ -18,14 +21,22 @@ const Device = () => {
   const history = useHistory();
 
   useEffect(() => {
+    const token = getToken();
+    console.log(token, "tokennn");
     axios
-      .get(`https://jsonplaceholder.typicode.com/users`)
+      .get(`${address}/api/device/getAllDevices`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+      })
       .then((res) => {
         const users = res.data;
+        console.log(users, "userrrr");
         setDeviceData(users);
       })
       .catch((error) => {
-        console.error("There is an error!", error);
+        console.error("error message", error.message);
       });
   }, []);
 
@@ -38,7 +49,7 @@ const Device = () => {
     const value = e.target.value;
     if (value.length >= 1) {
       result = deviceData.filter((character) => {
-        return character.name.toLowerCase().startsWith(value.toLowerCase());
+        return character.nameNumber.toLowerCase().startsWith(value.toLowerCase());
       });
       setFilteredData(result);
     } else {
@@ -53,13 +64,21 @@ const Device = () => {
   };
 
   const onDelete = (index) => {
+    const token = getToken();
     axios
-      .delete(`https://jsonplaceholder.typicode.com/users/${index}`)
+      .delete(`${address}/api/device/deleteDevice/${index}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+      })
       .then((res) => {
         const persons = res.data;
         console.log(persons, "deleted data");
         // filtering for deleted item
-        const filterddeviceData = deviceData.filter((item) => item.id !== index);
+        const filterddeviceData = deviceData.filter(
+          (item) => item.id !== index
+        );
         setDeviceData(filterddeviceData);
       });
   };
@@ -81,7 +100,7 @@ const Device = () => {
                     backgroundColor: "#3AAB7B",
                     border: "1px solid #3AAB7B",
                   }}
-                  onClick={() => history.push("/admin/adddevice")}
+                  onClick={() => history.push("/admin/adddevice/:id")}
                 >
                   ADD
                 </Button>
@@ -137,7 +156,7 @@ const Device = () => {
                     <tr>
                       <th className="border-0"> St </th>
                       <th className="border-0">Serial No</th>
-                      <th className="border-0">Name Number</th>
+                      <th className="border-0">Device Name</th>
                       <th className="border-0">Battery Status</th>
                       <th className="border-0">Status</th>
                       <th className="border-0">Actions</th>
@@ -161,8 +180,8 @@ const Device = () => {
                             ></Form.Control>
                           </td>
                           <td> {index + 1} </td>
-                          <td> {item.name} </td>
-                          <td> {item.username} </td>
+                          <td> {item.nameNumber} </td>
+                          <td> {item.batteryStatus} </td>
                           <td>
                             {item.Status ? (
                               <Button onClick={() => toggleStatus(index)}>
@@ -188,7 +207,7 @@ const Device = () => {
                               className="fa fa-edit mr-3"
                               style={{ color: "green" }}
                               onClick={() =>
-                                history.push("/admin/adddevice/?id=" + item.id)
+                                history.push(`/admin/adddevice/${item.id}`)
                               }
                             />
                             <i

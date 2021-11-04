@@ -73,7 +73,7 @@ const dashboardRoutes = [
   },
   {
     path: "/addnfccard",
-    name: "Add NFC Card",
+    name: "NFC Card",
     icon: "nc-icon nc-credit-card",
     component: addNfcCard,
     layout: "/admin",
@@ -87,21 +87,21 @@ const dashboardRoutes = [
   },
   {
     path: "/adddevice",
-    name: "Add Device",
+    name: "Device",
     icon: "nc-icon nc-mobile",
     component: addDevice,
     layout: "/admin",
   },
   {
     path: "/register",
-    name: "Register",
+    name: "Usuarionan",
     icon: "nc-icon nc-single-02",
     component: Register,
     layout: "/admin",
   },
   {
     path: "/addregister",
-    name: "Add Register",
+    name: "Registra Usuario",
     icon: "nc-icon nc-single-02",
     component: addRegister,
     layout: "/admin",
@@ -145,14 +145,14 @@ const dashboardRoutes = [
 
   {
     path: "/ClientList",
-    name: "Kliente List",
+    name: "Lista di Kliente",
     icon: "nc-icon nc-notes",
     component: ClientList,
     layout: "/admin",
   },
   {
     path: "/ClientForm",
-    name: "Add Kliente",
+    name: "Agrega Kliente",
     icon: "nc-icon nc-circle-09",
     component: ClientForm,
     layout: "/admin",
@@ -167,7 +167,7 @@ const dashboardRoutes = [
   },
   {
     path: "/MerchantForm",
-    name: "Add Merchant",
+    name: "Agrega Merchant",
     icon: "nc-icon nc-circle-09",
     component: MerchantForm,
     layout: "/admin",
@@ -183,7 +183,7 @@ const dashboardRoutes = [
 
   {
     path: "/MerchantTypeForm",
-    name: "Add Merchant Type",
+    name: "Agrega Merchant Type",
     icon: "nc-icon nc-circle-09",
     component: MerchantTypeForm,
     layout: "/admin",

@@ -40,11 +40,11 @@ const addRegister = () => {
   return (
     <div>
       <div className="row justify-content-center">
-        <div className="col-6 form-wrapper">
+        <div className="col-6 form-wrapper mt-5">
           <form onSubmit={onSubmitHandler}>
-            <h3 className="text-center m-5">Register</h3>
+            <h3 className="text-center m-5">Usuarionan</h3>
             <div className="form-row">
-              <div className="form-group col-md-12">
+              {/* <div className="form-group col-md-12">
                 <label for="firstName">First Name</label>
                 <input
                   type="text"
@@ -57,8 +57,8 @@ const addRegister = () => {
                   pattern="[a-zA-Z. ]+"
                   required
                 />
-              </div>
-              <div className="form-group col-md-12">
+              </div> */}
+              {/* <div className="form-group col-md-12">
                 <label for="lastName">Last Name</label>
                 <input
                   type="text"
@@ -71,7 +71,7 @@ const addRegister = () => {
                   pattern="[a-zA-Z. ]+"
                   required
                 />
-              </div>
+              </div> */}
             </div>
             <div className="form-group">
               <label for="email">Email</label>

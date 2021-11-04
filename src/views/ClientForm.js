@@ -165,7 +165,7 @@ function ClientForm() {
             <Card className="form-wrapper mt-4">
               <Card.Header style={{ backgroundColor: "#F7F7F8" }}>
                 <Card.Title as="h3" className="text-center m-3">
-                  Kliente
+                  Ciode di Kliente
                 </Card.Title>
               </Card.Header>
               <Card.Body>
@@ -239,7 +239,7 @@ function ClientForm() {
                     </Col>
                     <Col className="pl-1" md="6">
                       <Form.Group>
-                        <label>Tell Celluar</label>
+                        <label> Celullar</label>
                         <Form.Control
                           required
                           placeholder="042"
@@ -325,7 +325,7 @@ function ClientForm() {
                   <Row>
                     <Col className="pr-1" md="12">
                       <Form.Group>
-                        <label>Rebendadors</label>
+                        <label>Rebendedo</label>
                         <Form.Control
                           required
                           placeholder="Rebendadors"
@@ -350,9 +350,10 @@ function ClientForm() {
                         className="mr-5"
                         name="Status"
                         checked={Status}
-                        onClick={(e) => { handleInputChange(e) }}
+                        onClick={(e) => {
+                          handleInputChange(e);
+                        }}
                       />
-
                     </Col>
                   </Row>
                   <Row className="text-center mt-2">
