@@ -5,6 +5,7 @@ import { Button, Form } from "react-bootstrap";
 import { getToken } from "../services/auth";
 import address from "../services/address";
 import _uniqueId from "lodash/uniqueId";
+import addNfc from "services/nfc";
 import "../components/Dashboard.css";
 
 const addNfcCard = () => {
@@ -66,37 +67,22 @@ const addNfcCard = () => {
     setInputNfcData({ ...inputnfcData, [e.target.name]: e.target.value });
   };
 
-  const onSubmitHandler = (e) => {
-    e.preventDefault();
-
-    const token = getToken();
-    console.log(token, "submit handler token");
-
-    const newuser = {
-      id: inputnfcData?.id,
-      number: inputnfcData?.number,
-      status: inputnfcData?.status ? 1 : 0,
-    };
-    const myJSON = JSON.stringify(newuser);
-    console.log(newuser, "new userrrr");
-    axios
-      .post(
-        `${address}/api/nfcCard/createNfcCard`,
-          myJSON,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer" + token,
-          },
-        }
-      )
-      .then((res) => {
-        console.log(res);
-        console.log(res.data);
+ 
+  const onSubmitHandler = (event) => {
+  
+  event.preventDefault();
+  
+    addNfc(inputnfcData)
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
       });
+  
+  history.push("/admin/nfccard");
+};
 
-    // history.push("/admin/nfccard");
-  };
 
   // const onSubmitHandler = (e) => {
   //   e.preventDefault();
