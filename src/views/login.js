@@ -47,7 +47,7 @@ const LoginForm = (props) => {
   useEffect(() => {
     const storage = window.localStorage;
     const token = storage.getItem("token")
-    if(!token){
+    if(token){
       history.push('/admin/dashboard');
     }
   }, [])
@@ -146,7 +146,6 @@ const LoginForm = (props) => {
               {submitting ? 'Signing in...' : 'Sign In'}
             </Button>
           </Box>
-          
         </form>
       </Paper>
     </main>

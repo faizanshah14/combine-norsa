@@ -17,6 +17,7 @@ import { useEffect } from "react";
 import { getClientData } from "services/client";
 import "../components/Dashboard.css";
 import { updateClient } from "services/client";
+import getClientList from "services/client";
 import { addClient } from "services/client";
 import _uniqueId from 'lodash/uniqueId';
 
@@ -27,6 +28,8 @@ function ClientForm() {
   const [ClientID, setClientID] = React.useState(null);
   const [validated, setValidated] = React.useState(false);
   const [uniqueID] = React.useState(_uniqueId("prefix-"))
+  const [dealers, setDealers] = React.useState([])
+
   const [formData, setFormData] = React.useState({
     id: "",
     Code: "",
@@ -45,9 +48,17 @@ function ClientForm() {
     const params = queryParams.get("id");
     if (params != null) {
       setClientID(params);
-    }else{
-      setFormData({...formData, ["id"] : uniqueID})
+    } else {
+      setFormData({ ...formData, ["id"]: uniqueID })
     }
+    getClientList().
+      then(function (response) {
+        console.log(response.data)
+        setDealers(response.data)
+      })
+      .catch(function (error) {
+        console.log(error);
+      })
 
   }, []);
 
@@ -61,6 +72,8 @@ function ClientForm() {
       .catch(function (error) {
         console.log("cannot fetch the data with an " + error);
       });
+
+
   }, [ClientID]);
   const {
     id,
@@ -85,7 +98,7 @@ function ClientForm() {
       }
       return "No special characters";
     }
-    if (name === "FirstName" || name === "LastName" ) {
+    if (name === "FirstName" || name === "LastName") {
       let pattern = new RegExp("^[a-zA-Z ]*$");
       if (pattern.test(value)) {
         return true;
@@ -109,7 +122,7 @@ function ClientForm() {
       setFormData({ ...formData, [e.target.name]: !Status });
       return
     }
-    
+
 
     const valid = validateInput(e.target.name, e.target.value);
     if (valid != true) {
@@ -327,13 +340,22 @@ function ClientForm() {
                       <Form.Group>
                         <label>Rebendadors</label>
                         <Form.Control
-                          required
-                          placeholder="Rebendadors"
-                          type="text"
+                          as="select"
+                          defaultValue=""
                           value={Dealer_id}
                           name="Dealer_id"
-                          onChange={(e) => handleInputChange(e)}
-                        ></Form.Control>
+                          onChange={e => {
+                            console.log(e)
+                            console.log("e.target.value", e.target.value);
+                            handleInputChange(e)
+                          }}
+                        >
+                          {dealers.map((item) => {
+                            return (
+                              <option value={item.id}>{item.Code}</option>
+                            )
+                          })}
+                        </Form.Control>
                         <Form.Control.Feedback type="invalid">
                           Please provide a value.
                         </Form.Control.Feedback>

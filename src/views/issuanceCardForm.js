@@ -13,7 +13,9 @@ import {
   Col,
 } from "react-bootstrap";
 import { useHistory, Link } from "react-router-dom";
-
+import getClientList from "services/client";
+import getMerchantList from "services/merchant";
+import { getMerchantTypeDiscountByMerchantType_id } from "services/merchantType";
 import { useEffect } from "react";
 
 function IssuanceCardForm() {
@@ -21,6 +23,10 @@ function IssuanceCardForm() {
   const queryParams = new URLSearchParams(window.location.search);
   const [ClientID, setClientID] = React.useState();
   const [validated, setValidated] = React.useState(false);
+  const [allClients, setAllClients] = React.useState([])
+  const [allNfcCards, setAllNfcCards] = React.useState([])
+  const [allMerchants, setAllMerchants] = React.useState([])
+  const [allPaybackPeriodsOfCurrentMerchant, setAllPaybackPeriodsOfCurrentMerchant] = React.useState([])
   const [formData, setFormData] = React.useState({
     DateTime: "",
     Amount: "",
@@ -33,22 +39,6 @@ function IssuanceCardForm() {
     id: "",
     status: "",
   });
-  useEffect(() => {
-    const params = queryParams.get("id");
-    if (params != null) {
-      setClientID(params);
-    } else {
-      setClientID(null);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (ClientID != null) {
-      // get client data
-      const response = null;
-      //setFormData(response)
-    }
-  }, [ClientID]);
   const {
     DateTime,
     Amount,
@@ -61,6 +51,51 @@ function IssuanceCardForm() {
     id,
     status,
   } = formData;
+  useEffect(() => {
+    const params = queryParams.get("id");
+    if (params != null) {
+      setClientID(params);
+    } else {
+      setClientID(null);
+    }
+    getMerchantList().
+      then(function (response) {
+        console.log(response.data)
+        setAllMerchants(response.data)
+      })
+      .catch(function (error) {
+        console.log(error);
+      })
+    getClientList().
+      then(function (response) {
+        console.log(response.data)
+        setAllClients(response.data)
+      })
+      .catch(function (error) {
+        console.log(error);
+      })
+  }, []);
+
+  useEffect(() => {
+    if (Merchants_id.length < 1) return
+    getMerchantTypeDiscountByMerchantType_id(Merchants_id)
+      .then(function (response) {
+        console.log(response)
+        setAllPaybackPeriodsOfCurrentMerchant(response.data)
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+  }, [Merchants_id])
+
+  useEffect(() => {
+    if (ClientID != null) {
+      // get client data
+      const response = null;
+      //setFormData(response)
+    }
+  }, [ClientID]);
+
 
   const validateInput = (name, value) => {
     if (name === "Code") {
@@ -150,12 +185,13 @@ function IssuanceCardForm() {
                         <label>Montante</label>
                         <Form.Control
                           required
-                          placeholder="Frank"
-                          type="text"
+                          placeholder="100"
+                          type="number"
                           value={Amount}
                           name="Amount"
                           onChange={(e) => handleInputChange(e)}
                         ></Form.Control>
+
                         <Form.Control.Feedback type="invalid">
                           Please provide a value.
                         </Form.Control.Feedback>
@@ -167,13 +203,19 @@ function IssuanceCardForm() {
                       <Form.Group>
                         <label htmlFor="exampleLastName">Clinet Code</label>
                         <Form.Control
-                          required
-                          placeholder="Semper"
-                          type="text"
+                          as="select"
                           value={ClientID}
                           name="ClientID"
-                          onChange={(e) => handleInputChange(e)}
-                        ></Form.Control>
+                          onChange={e => {
+                            handleInputChange(e)
+                          }}
+                        >
+                          {allClients.map((item) => {
+                            return (
+                              <option value={item.id}>{item.Code}</option>
+                            )
+                          })}
+                        </Form.Control>
                         <Form.Control.Feedback type="invalid">
                           Please provide a value.
                         </Form.Control.Feedback>
@@ -183,13 +225,19 @@ function IssuanceCardForm() {
                       <Form.Group>
                         <label>NFC Card ID</label>
                         <Form.Control
-                          required
-                          placeholder="13"
-                          type="text"
+                          as="select"
                           value={NfcCard_id}
                           name="NfcCard_id"
-                          onChange={(e) => handleInputChange(e)}
-                        ></Form.Control>
+                          onChange={e => {
+                            handleInputChange(e)
+                          }}
+                        >
+                          {allNfcCards.map((item) => {
+                            return (
+                              <option value={item.id}>{item.Number}</option>
+                            )
+                          })}
+                        </Form.Control>
                         <Form.Control.Feedback type="invalid">
                           Please provide a value.
                         </Form.Control.Feedback>
@@ -201,13 +249,19 @@ function IssuanceCardForm() {
                       <Form.Group>
                         <label>Number Of Months</label>
                         <Form.Control
-                          required
-                          placeholder="042"
-                          type="text"
+                          as="select"
                           value={PaybackPeriod}
                           name="PaybackPeriod"
-                          onChange={(e) => handleInputChange(e)}
-                        ></Form.Control>
+                          onChange={e => {
+                            handleInputChange(e)
+                          }}
+                        >
+                          {allPaybackPeriodsOfCurrentMerchant.map((item) => {
+                            return (
+                              <option value={item.id}>{item.NumberOfMonths}</option>
+                            )
+                          })}
+                        </Form.Control>
                         <Form.Control.Feedback type="invalid">
                           Please provide a value.
                         </Form.Control.Feedback>
@@ -216,14 +270,22 @@ function IssuanceCardForm() {
                     <Col md="6">
                       <Form.Group>
                         <label>Merchant Details</label>
+
                         <Form.Control
-                          required
-                          placeholder="Ta taraha na"
-                          type="text"
+                          as="select"
                           value={Merchants_id}
                           name="Merchants_id"
-                          onChange={(e) => handleInputChange(e)}
-                        ></Form.Control>
+                          onChange={e => {
+                            handleInputChange(e)
+                          }}
+                        >
+                          {allMerchants.map((item) => {
+                            return (
+                              <option value={item.id}>{item.Name}</option>
+                            )
+                          })}
+                        </Form.Control>
+
                         <Form.Control.Feedback type="invalid">
                           Please provide a value.
                         </Form.Control.Feedback>

@@ -18,37 +18,36 @@ import { useEffect } from "react";
 
 function IssuanceHistory() {
   const [tableData, setTableData] = React.useState([{
-    Code: "", FirstName: "", LastName: "", WorkNo: "", ContactNo: "", WorksAt: "", Email: "",
-    FaxNumber: "", Fax: "", Status: "", MaxBorrowAmount: "", Dealer_id: "",
+    id: "", Client_id: "", Amount: "", PaybackPeriod: "", NfcCard_id: "", Merchants_id: "",
   }])
   const history = useHistory();
   const [status, setStatus] = React.useState(false)
 
   useEffect(() => {
-    setTableData([{
-      Code: "1", FirstName: "shaffan", LastName: "nasir", WorkNo: "none", ContactNo: "0332", WorksAt: "Fast", Email: "shaffan@gmail.com",
-      FaxNumber: "None", Fax: "None", Status: false, MaxBorrowAmount: "100", Dealer_id: "1",
-    },
-    {
-      Code: "2", FirstName: "shaffan", LastName: "nasir", WorkNo: "none", ContactNo: "0332", WorksAt: "Fast", Email: "shaffan@gmail.com",
-      FaxNumber: "None", Fax: "None", Status: false, MaxBorrowAmount: "100", Dealer_id: "1",
-    },
-    {
-      Code: "3", FirstName: "shaffan", LastName: "nasir", WorkNo: "none", ContactNo: "0332", WorksAt: "Fast", Email: "shaffan@gmail.com",
-      FaxNumber: "None", Fax: "None", Status: false, MaxBorrowAmount: "100", Dealer_id: "1",
-    },
-    {
-      Code: "4", FirstName: "shaffan", LastName: "nasir", WorkNo: "none", ContactNo: "0332", WorksAt: "Fast", Email: "shaffan@gmail.com",
-      FaxNumber: "None", Fax: "None", Status: false, MaxBorrowAmount: "100", Dealer_id: "1",
-    },
-    {
-      Code: "5", FirstName: "shaffan", LastName: "nasir", WorkNo: "none", ContactNo: "0332", WorksAt: "Fast", Email: "shaffan@gmail.com",
-      FaxNumber: "None", Fax: "None", Status: false, MaxBorrowAmount: "100", Dealer_id: "1",
-    },
-    {
-      Code: "6", FirstName: "shaffan", LastName: "nasir", WorkNo: "none", ContactNo: "0332", WorksAt: "Fast", Email: "shaffan@gmail.com",
-      FaxNumber: "None", Fax: "None", Status: false, MaxBorrowAmount: "100", Dealer_id: "1",
-    },])
+    // setTableData([{
+    //   Code: "1", FirstName: "shaffan", LastName: "nasir", WorkNo: "none", ContactNo: "0332", WorksAt: "Fast", Email: "shaffan@gmail.com",
+    //   FaxNumber: "None", Fax: "None", Status: false, MaxBorrowAmount: "100", Dealer_id: "1",
+    // },
+    // {
+    //   Code: "2", FirstName: "shaffan", LastName: "nasir", WorkNo: "none", ContactNo: "0332", WorksAt: "Fast", Email: "shaffan@gmail.com",
+    //   FaxNumber: "None", Fax: "None", Status: false, MaxBorrowAmount: "100", Dealer_id: "1",
+    // },
+    // {
+    //   Code: "3", FirstName: "shaffan", LastName: "nasir", WorkNo: "none", ContactNo: "0332", WorksAt: "Fast", Email: "shaffan@gmail.com",
+    //   FaxNumber: "None", Fax: "None", Status: false, MaxBorrowAmount: "100", Dealer_id: "1",
+    // },
+    // {
+    //   Code: "4", FirstName: "shaffan", LastName: "nasir", WorkNo: "none", ContactNo: "0332", WorksAt: "Fast", Email: "shaffan@gmail.com",
+    //   FaxNumber: "None", Fax: "None", Status: false, MaxBorrowAmount: "100", Dealer_id: "1",
+    // },
+    // {
+    //   Code: "5", FirstName: "shaffan", LastName: "nasir", WorkNo: "none", ContactNo: "0332", WorksAt: "Fast", Email: "shaffan@gmail.com",
+    //   FaxNumber: "None", Fax: "None", Status: false, MaxBorrowAmount: "100", Dealer_id: "1",
+    // },
+    // {
+    //   Code: "6", FirstName: "shaffan", LastName: "nasir", WorkNo: "none", ContactNo: "0332", WorksAt: "Fast", Email: "shaffan@gmail.com",
+    //   FaxNumber: "None", Fax: "None", Status: false, MaxBorrowAmount: "100", Dealer_id: "1",
+    // },])
 
   }, [])
 
@@ -67,7 +66,7 @@ function IssuanceHistory() {
           <Col md="12">
             <Card className="card-plain table-plain-bg">
               <Card.Header>
-                <Card.Title as="h3">Kliente</Card.Title>
+                <Card.Title as="h3">Issuance History</Card.Title>
               </Card.Header>
               <Card.Body className="table-full-width table-responsive px-0">
                 <Button
@@ -98,17 +97,13 @@ function IssuanceHistory() {
                 <Table className="table-hover mt-3">
                   <thead>
                     <tr>
-                      <th className="border-0"> st </th>
-                      <th className="border-0">Code</th>
-                      <th className="border-0">First Nomber</th>
-                      <th className="border-0">Last Nomber</th>
-                      <th className="border-0">Email</th>
-                      <th className="border-0">Tell Celluar</th>
-                      <th className="border-0">Ta taraha na</th>
-                      <th className="border-0">Fax</th>
-                      <th className="border-0">Kredito Maksimo</th>
-                      <th className="border-0">Status</th>
-                      <th className="border-0">Issuance History</th>
+
+                      <th className="border-0">Fetcha</th>
+                      <th className="border-0">Kliente</th>
+                      <th className="border-0">Montante </th>
+                      <th className="border-0">Periodo di Pago </th>
+                      <th className="border-0">Nfc Card </th>
+                      <th className="border-0">Negoshi</th>
                       <th className="border-0">Actions</th>
                     </tr>
                   </thead>
@@ -116,54 +111,16 @@ function IssuanceHistory() {
                     {tableData.map((item, index) => {
                       return (
                         <tr key={index}>
+
+                          <td> {item.id} </td>
+                          <td> {item.Client_id} </td>
+                          <td> {item.Amount} </td>
+                          <td> {item.PaybackPeriod} </td>
+                          <td> {item.NfcCard_id} </td>
+                          <td> {item.Merchants_id} </td>
+
+
                           <td>
-                            {" "}
-                            <Form.Control
-                              placeholder="Fax"
-                              type="checkbox"
-                              style={{width:"16px"}}
-                            ></Form.Control>
-                          </td>
-                          <td> {item.Code} </td>
-                          <td> {item.FirstName} </td>
-                          <td> {item.LastName} </td>
-                          <td> {item.Email} </td>
-                          <td> {item.WorkNo} </td>
-                          <td> {item.WorksAt} </td>
-                          <td> {item.Fax} </td>
-                          <td> {item.MaxBorrowAmount} </td>
-                          <td>
-                            {" "}
-                            {item.Status ? (
-                              <Button onClick={() => toggleStatus(index)}>
-                                <i
-                                  className="fa fa-toggle-on"
-                                  style={{
-                                    color: "green",
-                                    textAlign: "center",
-                                  }}
-                                />
-                              </Button>
-                            ) : (
-                              <Button onClick={() => toggleStatus(index)}>
-                                <i
-                                  className="fa fa-ban"
-                                  style={{ color: "red", textAlign: "center" }}
-                                />
-                              </Button>
-                            )}
-                          </td>
-                          <td align="center">
-                            <Button
-                              onClick={() => history.push("/admin/ClientForm")}
-                            >
-                              <i
-                                className="nc-icon nc-notes"
-                                style={{ color: "black" }}
-                              />
-                            </Button>
-                          </td>
-                          <td align="center">
                             <i
                               className="fa fa-edit"
                               style={{ color: "green" }}

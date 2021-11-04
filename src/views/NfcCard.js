@@ -14,10 +14,15 @@ import {
 const NfcCard = () => {
   const [nfcData, setNfcData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
-
   const history = useHistory();
-
+ 
   useEffect(() => {
+    const storage = window.localStorage;
+    const token = storage.getItem("token")
+    if (!token) {
+      history.push('/login');
+      return
+    }
     axios
       .get(`https://jsonplaceholder.typicode.com/users`)
       .then((res) => {

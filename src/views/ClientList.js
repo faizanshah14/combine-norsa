@@ -36,7 +36,7 @@ function ClientList() {
   })
   useEffect(() => {
     if (!checkUser()) {
-      history.push('/admin/dashboard')
+      history.push('/login')
       return;
     }
     setFilterTableData([])

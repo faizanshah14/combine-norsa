@@ -13,6 +13,7 @@ import {
   Col,
 } from "react-bootstrap";
 import { useHistory, Link } from 'react-router-dom';
+import getMerchantTypeList from "services/merchantType";
 
 import { useEffect } from "react";
 import { getMerchantData } from "services/merchant";
@@ -30,6 +31,7 @@ function MerchantForm() {
   const [formData, setFormData] = React.useState({
     id: "", Code: "", Name: "", MerchantType_id: "", AccountNo: "", BankName: ""
   });
+  const [merchantTypes, setMerchantTypes] = React.useState([])
   useEffect(() => {
     const params = queryParams.get("id")
     if (params != null) {
@@ -38,6 +40,14 @@ function MerchantForm() {
     else {
       setFormData({ ...formData, ["id"]: uniqueID })
     }
+    getMerchantTypeList().
+      then(function (response) {
+        console.log(response.data)
+        setMerchantTypes(response.data)
+      })
+      .catch(function (error) {
+        console.log(error);
+      })
   }, [])
   useEffect(() => {
     if (ClientID == null) return
@@ -197,14 +207,22 @@ function MerchantForm() {
                     <Col className="pr-1" md="12">
                       <Form.Group>
                         <label>Merchant Type</label>
+                       
                         <Form.Control
-                          required
-                          placeholder="Abc"
-                          type="text"
+                          as="select"
                           value={MerchantType_id}
                           name="MerchantType_id"
-                          onChange={(e) => handleInputChange(e)}
-                        ></Form.Control>
+                          onChange={e => {
+                           
+                            handleInputChange(e)
+                          }}
+                        >
+                          {merchantTypes.map((item) => {
+                            return (
+                              <option value={item.id}>{item.Title}</option>
+                            )
+                          })}
+                        </Form.Control>
                         <Form.Control.Feedback type="invalid">
                           Please provide a value.
                         </Form.Control.Feedback>

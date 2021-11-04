@@ -1,5 +1,6 @@
 import React from "react";
 import ChartistGraph from "react-chartist";
+import { useHistory } from 'react-router-dom';
 // react-bootstrap components
 import {
   Badge,
@@ -15,8 +16,19 @@ import {
   OverlayTrigger,
   Tooltip,
 } from "react-bootstrap";
+import { useEffect } from "react";
+
 
 function Dashboard() {
+  const history = useHistory();
+
+  useEffect(() => {
+    const storage = window.localStorage;
+    const token = storage.getItem("token")
+    if (!token) {
+      history.push('/login');
+    }
+  }, [])
   return (
     <>
       <Container fluid>
