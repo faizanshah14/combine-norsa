@@ -1,39 +1,45 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useState , useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { Button, Form } from "react-bootstrap";
+import _uniqueId from "lodash/uniqueId";
+import addRegisterr from "services/register";
 import "../components/Dashboard.css";
 
 const addRegister = () => {
-  const [inputnfcData, setInputNfcData] = useState({
-    // id: "",
-    // checked: false,
-    firstName: "",
-    lastName: "",
+  const [inputregisterData, setInputRegisterData] = useState({
+    id: "",
     email: "",
     password: "",
   });
 
+  const [uniqueID] = React.useState(_uniqueId("prefix-"));
+
   const history = useHistory();
+
   const queryParams = new URLSearchParams(window.location.search);
 
+  useEffect(() => {
+    setInputRegisterData({ ...inputregisterData, ["id"]: uniqueID });
+  }, []);
+
   const onChnageHandler = (e) => {
-    setInputNfcData({ ...inputnfcData, [e.target.name]: e.target.value });
+    setInputRegisterData({
+      ...inputregisterData,
+      [e.target.name]: e.target.value,
+    });
   };
 
-  const onSubmitHandler = (e) => {
-    e.preventDefault();
-    const newuser = {
-      // id: inputnfcData.id,
-      number: inputnfcData.number,
-      // status: inputnfcData.status,
-    };
-    axios
-      .post(`https://jsonplaceholder.typicode.com/users`, { newuser })
-      .then((res) => {
-        console.log(res);
-        console.log(res.data);
+  const onSubmitHandler = (event) => {
+    event.preventDefault();
+
+    addRegisterr(inputregisterData)
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
       });
+
     history.push("/admin/register");
   };
 
@@ -81,7 +87,7 @@ const addRegister = () => {
                 id="email"
                 placeholder="Email"
                 name="email"
-                value={inputnfcData.email}
+                value={inputregisterData.email}
                 onChange={onChnageHandler}
                 pattern="[a-zA-Z0-9_.-]{3,}@[A-Za-z]{3,}[.]{1}[A-Za-z]{1,}"
                 required
@@ -95,7 +101,7 @@ const addRegister = () => {
                 id="password"
                 placeholder="Password"
                 name="password"
-                value={inputnfcData.password}
+                value={inputregisterData.password}
                 onChange={onChnageHandler}
                 // pattern="(?=.*[0-9])[A-Za-z0-9!@#$%^&*]{6,15}"
                 required

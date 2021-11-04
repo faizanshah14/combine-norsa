@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { Button, Form } from "react-bootstrap";
+import _uniqueId from "lodash/uniqueId";
+import addDevicee from "services/device";
 import "../components/Dashboard.css";
 
 const addDevice = () => {
@@ -9,9 +11,10 @@ const addDevice = () => {
     id: "",
     nameNumber: "",
     batteryStatus: "",
-    status: "active",
+    status: 0,
   });
 
+  const [uniqueID] = React.useState(_uniqueId("prefix-"));
   const [updateData, setUpdateData] = useState([]);
 
   const history = useHistory();
@@ -19,92 +22,118 @@ const addDevice = () => {
   const { id } = useParams();
   console.log(id, "id");
 
+  useEffect(() => {
+    setInputDeviceData({ ...inputdeviceData, ["id"]: uniqueID });
+  }, []);
+
   const onChangeHandler = (e) => {
+    if (e.target.name == "status") {
+      setInputDeviceData({
+        ...inputdeviceData,
+        [e.target.name]: !inputdeviceData.status,
+      });
+      return;
+    }
+
     setInputDeviceData({ ...inputdeviceData, [e.target.name]: e.target.value });
   };
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    console.log(token, "add form token");
-    axios
-      .get("https://norsabackend.herokuapp.com/api/api/device/getAllDevices", {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer" + token,
-        },
+  const onSubmitHandler = (event) => {
+    event.preventDefault();
+
+    addDevicee(inputdeviceData)
+      .then(function (response) {
+        console.log(response);
       })
-      .then((res) => {
-        const users = res.data;
-        setUpdateData(users);
-        console.log(users, "form get data");
-      })
-      .catch((error) => {
-        console.error("There is an error!", error);
+      .catch(function (error) {
+        console.log(error);
       });
-  }, []);
 
-  useEffect(() => {
-    const filteredData = updateData?.find((arr) => arr.id === parseInt(id));
-    setInputDeviceData({ ...filteredData });
-    // eslint-disable-next-line
-  }, [id, updateData]);
-
-  const onSubmitHandler = (e) => {
-    e.preventDefault();
-    const token = localStorage.getItem("token");
-
-    const newuser = {
-      id: inputdeviceData.id,
-      nameNumber: inputdeviceData.nameNumber,
-      batteryStatus: inputdeviceData.batteryStatus,
-      status: inputdeviceData.status,
-    };
-
-    const edituser = {
-      id: inputdeviceData.id,
-      nameNumber: inputdeviceData.nameNumber,
-      batteryStatus: inputdeviceData.batteryStatus,
-      status: inputdeviceData.status,
-    };
-
-    if (inputdeviceData?.id) {
-      axios
-        .post(
-          `https://norsabackend.herokuapp.com/api/device/upsertDevice`,
-          {
-            edituser,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: "Bearer" + token,
-            },
-          }
-        )
-        .then((res) => {
-          console.log(res);
-          console.log(res.data);
-        });
-    } else {
-      axios
-        .post(
-          `https://norsabackend.herokuapp.com/api/device/createDevice`,
-          {
-            newuser,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: "Bearer" + token,
-            },
-          }
-        )
-        .then((res) => {
-          console.log(res);
-          console.log(res.data);
-        });
-    }
+    history.push("/admin/device");
   };
+
+  // useEffect(() => {
+  //   const token = localStorage.getItem("token");
+  //   console.log(token, "add form token");
+  //   axios
+  //     .get("https://norsabackend.herokuapp.com/api/api/device/getAllDevices", {
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Authorization: "Bearer" + token,
+  //       },
+  //     })
+  //     .then((res) => {
+  //       const users = res.data;
+  //       setUpdateData(users);
+  //       console.log(users, "form get data");
+  //     })
+  //     .catch((error) => {
+  //       console.error("There is an error!", error);
+  //     });
+  // }, []);
+
+  // useEffect(() => {
+  //   const filteredData = updateData?.find((arr) => arr.id === parseInt(id));
+  //   setInputDeviceData({ ...filteredData });
+  //   // eslint-disable-next-line
+  // }, [id, updateData]);
+
+  // const onSubmitHandler = (e) => {
+  //   e.preventDefault();
+  //   const token = localStorage.getItem("token");
+
+  //   const newuser = {
+  //     id: inputdeviceData.id,
+  //     nameNumber: inputdeviceData.nameNumber,
+  //     batteryStatus: inputdeviceData.batteryStatus,
+  //     status: inputdeviceData.status,
+  //   };
+
+  //   const edituser = {
+  //     id: inputdeviceData.id,
+  //     nameNumber: inputdeviceData.nameNumber,
+  //     batteryStatus: inputdeviceData.batteryStatus,
+  //     status: inputdeviceData.status,
+  //   };
+
+  //   if (inputdeviceData?.id) {
+  //     axios
+  //       .post(
+  //         `https://norsabackend.herokuapp.com/api/device/upsertDevice`,
+  //         {
+  //           edituser,
+  //         },
+  //         {
+  //           headers: {
+  //             "Content-Type": "application/json",
+  //             Authorization: "Bearer" + token,
+  //           },
+  //         }
+  //       )
+  //       .then((res) => {
+  //         console.log(res);
+  //         console.log(res.data);
+  //       });
+  //   } else {
+  //     axios
+  //       .post(
+  //         `https://norsabackend.herokuapp.com/api/device/createDevice`,
+  //         {
+  //           newuser,
+  //         },
+  //         {
+  //           headers: {
+  //             "Content-Type": "application/json",
+  //             Authorization: "Bearer" + token,
+  //           },
+  //         }
+  //       )
+  //       .then((res) => {
+  //         console.log(res);
+  //         console.log(res.data);
+  //       });
+  //   }
+  // };
 
   return (
     <div>
@@ -126,8 +155,8 @@ const addDevice = () => {
                   placeholder="Number"
                   name="nameNumber"
                   value={inputdeviceData.nameNumber}
-                  onChange={(e) => onChnageHandler(e)}
-                  pattern="[a-zA-Z0-9_.- ]+"
+                  onChange={(e) => onChangeHandler(e)}
+                  // pattern="[a-zA-Z0-9_.- ]+"
                   required
                 />
               </div>
@@ -140,8 +169,8 @@ const addDevice = () => {
                   placeholder="Battery Status"
                   name="batteryStatus"
                   value={inputdeviceData.batteryStatus}
-                  onChange={(e) => onChnageHandler(e)}
-                  pattern="[a-zA-Z0-9_.- ]+"
+                  onChange={(e) => onChangeHandler(e)}
+                  // pattern="[a-zA-Z0-9_.- ]+"
                   required
                 />
               </div>
@@ -150,18 +179,18 @@ const addDevice = () => {
               <label for="status" className="mr-5 mt-2 mb-3">
                 Status
               </label>
-              <div>
-                <Form.Check
-                  inline
-                  className="mr-5"
-                  label="Active"
-                  type="Radio"
-                  checked={inputdeviceData.status === "active"}
-                  name="status"
-                  value={inputdeviceData.status}
-                  onChange={onChangeHandler}
-                />
-              </div>
+              <Form.Check
+                inline
+                label="Active"
+                name="group1"
+                type="Radio"
+                className="mr-5"
+                name="status"
+                checked={inputdeviceData.status}
+                onClick={(e) => {
+                  onChangeHandler(e);
+                }}
+              />
             </div>
             <div className="mt-5 text-center">
               <Button

@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
+import { getToken } from "services/auth";
+import address from "services/address";
+
 import {
   Button,
   Form,
@@ -18,12 +21,13 @@ const Register = () => {
   const history = useHistory();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = getToken();
     console.log(token, "tokennn");
     axios
-      .get("https://norsabackend.herokuapp.com/.....", {
+      .get(`${address}/...`, {
         headers: {
-          Authorization: `Bearer  ${token}`,
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
         },
       })
       .then((res) => {
@@ -35,7 +39,6 @@ const Register = () => {
         console.error("error message", error.message);
       });
   }, []);
-
 
   useEffect(() => {
     if (registerData.length) setFilteredData(registerData);
@@ -58,18 +61,6 @@ const Register = () => {
     let tempTable = [...registerData];
     tempTable[index].Status = !tempTable[index].Status;
     setRegisterData(tempTable);
-  };
-
-  const onDelete = (index) => {
-    axios
-      .delete(`https://jsonplaceholder.typicode.com/users/${index}`)
-      .then((res) => {
-        const persons = res.data;
-        console.log(persons, "deleted data");
-        // filtering for deleted item
-        const filterdregisterData = registerData.filter((item) => item.id !== index);
-        setRegisterData(filterdregisterData);
-      });
   };
 
   return (
