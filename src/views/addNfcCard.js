@@ -1,217 +1,196 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { Link, useHistory, useParams } from "react-router-dom";
-import { Button, Form } from "react-bootstrap";
-import { getToken } from "../services/auth";
-import address from "../services/address";
-import _uniqueId from "lodash/uniqueId";
-import addNfc from "services/nfc";
+import React from "react";
+
+// react-bootstrap components
+import {
+  Button,
+  Card,
+  Form,
+  Container,
+  Row,
+  Col,
+} from "react-bootstrap";
+import { useHistory, Link } from "react-router-dom";
+import { useEffect } from "react";
+import { getNfcSingleData } from "services/nfc";
 import "../components/Dashboard.css";
-import checkUser from "services/auth";
+import { updateNfc } from "services/nfc";
+import getNfcData from "services/nfc";
+import { addNfc } from "services/nfc";
+import _uniqueId from "lodash/uniqueId";
 
+function addNfcCard() {
+  const history = useHistory();
+  const queryParams = new URLSearchParams(window.location.search);
+  const [ClientID, setClientID] = React.useState(null);
+  const [validated, setValidated] = React.useState(false);
+  const [uniqueID] = React.useState(_uniqueId("prefix-"));
+  const [dealers, setDealers] = React.useState([]);
 
-const addNfcCard = () => {
-  const [inputnfcData, setInputNfcData] = useState({
+  const [formData, setFormData] = React.useState({
     id: "",
-    number: "",
+    number:"",
     status: 0,
   });
-  const [uniqueID] = React.useState(_uniqueId("prefix-"));
-  const [updateData, setUpdateData] = useState([]);
-
-  const history = useHistory();
-
-  const { id } = useParams();
-
   useEffect(() => {
-    if (!checkUser()) {
-      history.push('/login')
-      return;
+    const params = queryParams.get("id");
+    if (params != null) {
+      setClientID(params);
+    } else {
+      setFormData({ ...formData, ["id"]: uniqueID });
     }
-    setInputNfcData({ ...inputnfcData, ["id"]: uniqueID });
-  }, []);
-
-  // useEffect(() => {
-  //   const token = getToken();
-  //   console.log(token, "add form token");
-  //   axios
-  //     .get(`${address}/api/nfcCard/getNfcCardById/${id}`, {
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         Authorization: "Bearer" + token,
-  //       },
-  //     })
-  //     .then((res) => {
-  //       const users = res.data;
-  //       setUpdateData(users);
-  //       console.log(users, "form get data");
-  //     })
-  //     .catch((error) => {
-  //       console.error("There is an error!", error);
-  //     });
-  // }, []);
-
-  // useEffect(() => {
-  //   const filteredData = updateData?.find((arr) => arr.id === parseInt(id));
-  //   setInputNfcData({ ...filteredData });
-  //   // eslint-disable-next-line
-  // }, [id, updateData]);
-
-  // const onChangeHandler = (e) => {
-  //   setInputNfcData({ ...inputnfcData, [e.target.name]: e.target.value });
-  // };
-
-  const onChangeHandler = (e) => {
-    if (e.target.name == "status") {
-      setInputNfcData({
-        ...inputnfcData,
-        [e.target.name]: !inputnfcData.status,
-      });
-      return;
-    }
-
-    setInputNfcData({ ...inputnfcData, [e.target.name]: e.target.value });
-  };
-
- 
-  const onSubmitHandler = (event) => {
-  
-  event.preventDefault();
-  
-    addNfc(inputnfcData)
+    getNfcData()
       .then(function (response) {
-        console.log(response);
+        console.log(response.data);
+        setDealers(response.data);
       })
       .catch(function (error) {
         console.log(error);
       });
+  }, []);
+
+  useEffect(() => {
+    if (ClientID == null) return;
+    getNfcSingleData(ClientID)
+      .then(function (response) {
+        console.log(response);
+        setFormData(response.data);
+      })
+      .catch(function (error) {
+        console.log("cannot fetch the data with an " + error);
+      });
+  }, [ClientID]);
+  const {
+    id,
+    number,
+    status,
+  } = formData;
+
+  const validateInput = (name, value) => {
+    if (name === "number") {
+      let pattern = new RegExp("^[a-zA-Z 0-9_.-]*$");
+      if (pattern.test(value)) {
+        return true;
+      }
+      return "No special characters";
+    }
+   
+    return true;
+  };
+
+  const handleInputChange = (e) => {
+    if (e.target.name == "status") {
+      setFormData({ ...formData, [e.target.name]: !status });
+      return;
+    }
+
+    const valid = validateInput(e.target.name, e.target.value);
+    if (valid != true) {
+      alert(valid);
+      return;
+    }
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
   
-  history.push("/admin/nfccard");
-};
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (ClientID) {
+      updateNfc(formData)
+        .then(function (response) {
+          console.log(response);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    } else {
+      addNfc(formData)
+        .then(function (response) {
+          console.log(response);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
 
-
-  // const onSubmitHandler = (e) => {
-  //   e.preventDefault();
-  //   const token = localStorage.getItem("token");
-  //   console.log(token, "submit handler token")
-
-  //   const newuser = {
-  //     id: inputnfcData.id,
-  //     number: inputnfcData.number,
-  //     status: inputnfcData.status,
-  //   };
-
-  //   const edituser = {
-  //     id: inputnfcData.id,
-  //     number: inputnfcData.number,
-  //     status: inputnfcData.status,
-  //   };
-
-  //   if (inputnfcData?.id) {
-  //     axios
-  //       .post(
-  //         `https://norsabackend.herokuapp.com/api/nfcCard/upsertNfcCard`,
-  //         {
-  //           edituser,
-  //         },
-  //         {
-  //           headers: {
-  //             "Content-Type": "application/json",
-  //             Authorization: "Bearer" + token,
-  //           },
-  //         }
-  //       )
-  //       .then((res) => {
-  //         console.log(res);
-  //         console.log(res.data);
-  //       });
-  //   } else {
-  //     axios
-  //       .post(
-  //         `https://norsabackend.herokuapp.com/api/nfcCard/createNfcCard`,
-  //         {
-  //           newuser,
-  //         },
-  //         {
-  //           headers: {
-  //             "Content-Type": "application/json",
-  //             Authorization: "Bearer" + token,
-  //           },
-  //         }
-  //       )
-  //       .then((res) => {
-  //         console.log(res);
-  //         console.log(res.data);
-  //       });
-  //   }
-
-  // history.push("/admin/nfccard");
-  // };
+    history.push("/admin/nfccard");
+  };
 
   return (
-    <div>
-      <div className="row justify-content-center">
-        <div className="col-6 form-wrapper mt-5">
-          <form onSubmit={onSubmitHandler}>
-            <h3 className="text-center m-5">NFC Card</h3>
-            <div className="form-row">
-              <div className="form-group col-md-12">
-                <label for="number">Nomber</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="number"
-                  placeholder="Nomber"
-                  name="number"
-                  value={inputnfcData.number}
-                  onChange={(e) => {
-                    onChangeHandler(e);
-                  }}
-                  // pattern="[a-zA-Z0-9_.- ]+"
-                  required
-                />
-              </div>
-            </div>
-            <div className="form-group radio-div ml-1">
-              <label for="status" className="mr-5 mt-2 mb-3">
-                Status
-              </label>
-              <Form.Check
-                inline
-                label="Active"
-                name="group1"
-                type="Radio"
-                className="mr-5"
-                name="status"
-                checked={inputnfcData.status}
-                onClick={(e) => {
-                  onChangeHandler(e);
-                }}
-              />
-            </div>
-            <div className="mt-5 text-center">
-              <Button
-                className="btn-fill mr-3"
-                style={{
-                  backgroundColor: "#3AAB7B",
-                  border: "1px solid #3AAB7B",
-                }}
-                type="submit"
-              >
-                Save
-              </Button>
-              <Link to="/admin/nfccard">
-                <Button className="btn-fill" variant="danger">
-                  Back
-                </Button>
-              </Link>
-            </div>
-          </form>
-          {/* <div>status = {inputnfcData.status}</div> */}
-        </div>
-      </div>
-    </div>
-  );
-};
+    <>
+      <Container>
+        <Row className="justify-content-center">
+          <Col md="8">
+            <Card className="form-wrapper mt-4">
+              <Card.Header style={{ backgroundColor: "#F7F7F8" }}>
+                <Card.Title as="h3" className="text-center m-3">
+                  NFC Card
+                </Card.Title>
+              </Card.Header>
+              <Card.Body>
+                <Form onSubmit={handleSubmit}>
+                  <Row>
+                    <Col md="12">
+                      <Form.Group>
+                        <label>Nomber</label>
+                        <Form.Control
+                          required
+                          placeholder="Nomber"
+                          type="text"
+                          value={number}
+                          name="number"
+                          onChange={(e) => handleInputChange(e)}
+                        ></Form.Control>
+                        <Form.Control.Feedback type="invalid">
+                          Please provide a value.
+                        </Form.Control.Feedback>
+                      </Form.Group>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col className="pr-1 d-flex" md="12">
+                      <label className="mr-5 mt-1">Status</label>
+                      <Form.Check
+                        inline
+                        label="Active"
+                        name="group1"
+                        type="Radio"
+                        className="mr-5"
+                        name="status"
+                        checked={status}
+                        onClick={(e) => {
+                          handleInputChange(e);
+                        }}
+                      />
+                    </Col>
+                  </Row>
+                  <Row className="text-center mt-2">
+                    <Col md="12">
+                      <Button
+                        className="btn-fill mr-3"
+                        type="submit"
+                        style={{
+                          backgroundColor: "#3AAB7B",
+                          border: "2px solid #3AAB7B",
+                        }}
+                      >
+                        Save
+                      </Button>
+                      <Link to="/admin/nfccard">
+                        <Button className="btn-fill" variant="danger">
+                          Back
+                        </Button>
+                      </Link>
+                    </Col>
+                  </Row>
 
-export default addNfcCard;
+                  <div className="clearfix"></div>
+                </Form>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+      </Container>
+    </>
+  );
+}
+
+export default addNfcCard ;

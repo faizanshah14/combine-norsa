@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
-import axios from "axios";
+import React from "react";
+
+// react-bootstrap components
 import {
   Button,
   Form,
@@ -10,77 +10,79 @@ import {
   Row,
   Col,
 } from "react-bootstrap";
-import { getToken } from "../services/auth";
-import address from "../services/address";
+import { useHistory } from "react-router-dom";
+import { useEffect } from "react";
+import checkUser from "services/auth";
+import getDeviceData from "services/device";
+import { deleteDevice } from "services/device";
+import { updateDevice } from "services/device";
 
-
-const Device = () => {
-  const [deviceData, setDeviceData] = useState([]);
-  const [filteredData, setFilteredData] = useState([]);
-
+function Device() {
+  const [tableData, setTableData] = React.useState([
+    {
+      Checked: false,
+      id: "",
+      nameNumber: "",
+      batteryStatus: "",
+      status: "",
+    },
+  ]);
   const history = useHistory();
+  const [toSearch, setToSearch] = React.useState("");
+  const [filterTableData, setFilterTableData] = React.useState([]);
 
   useEffect(() => {
-    const token = getToken();
-    console.log(token, "tokennn");
-    axios
-      .get(`${address}/api/device/getAllDevices`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token,
-        },
-      })
-      .then((res) => {
-        const users = res.data;
-        console.log(users, "userrrr");
-        setDeviceData(users);
-      })
-      .catch((error) => {
-        console.error("error message", error.message);
-      });
-  }, []);
-
-  useEffect(() => {
-    if (deviceData.length) setFilteredData(deviceData);
-  }, [deviceData]);
-
-  const onChangeHandler = (e) => {
-    let result = [];
-    const value = e.target.value;
-    if (value.length >= 1) {
-      result = deviceData.filter((character) => {
-        return character.nameNumber.toLowerCase().startsWith(value.toLowerCase());
-      });
-      setFilteredData(result);
-    } else {
-      setFilteredData(deviceData);
+    if (!checkUser()) {
+      history.push("/login");
+      return;
     }
-  };
+    setFilterTableData([]);
+    getDeviceData()
+      .then(function (response) {
+        console.log(response.data);
+        setTableData(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }, [tableData]);
+
+  useEffect(() => {
+    let tempTable = [];
+    tableData.map((item, index) => {
+      if (
+        item?.nameNumber?.includes(toSearch)
+      ) {
+      } else {
+        tempTable.push(item);
+      }
+    });
+    setFilterTableData(tempTable);
+  }, [toSearch]);
 
   const toggleStatus = (index) => {
-    let tempTable = [...deviceData];
-    tempTable[index].Status = !tempTable[index].Status;
-    setDeviceData(tempTable);
+    let tempTable = [...tableData];
+    tempTable[index].status = !tempTable[index].status;
+    updateDevice(tempTable[index])
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
+    setTableData(tempTable);
   };
 
-  const onDelete = (index) => {
-    const token = getToken();
-    axios
-      .delete(`${address}/api/device/deleteDevice/${index}`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token,
-        },
+  const deleteRow = (itemToDelete) => {
+    deleteDevice(tableData[itemToDelete].id)
+      .then(function (response) {
+        console.log(response);
       })
-      .then((res) => {
-        const persons = res.data;
-        console.log(persons, "deleted data");
-        // filtering for deleted item
-        const filterddeviceData = deviceData.filter(
-          (item) => item.id !== index
-        );
-        setDeviceData(filterddeviceData);
+      .catch(function (error) {
+        console.log(error);
       });
+    setTableData(tableData.filter((item, index) => index !== itemToDelete));
   };
 
   return (
@@ -94,25 +96,32 @@ const Device = () => {
               </Card.Header>
               <Card.Body className="table-full-width table-responsive px-0">
                 <Button
-                  className="btn-fill pull-right ml-3 mr-3"
+                  className="btn-fill ml-3 mr-3"
                   type="submit"
                   style={{
                     backgroundColor: "#3AAB7B",
                     border: "1px solid #3AAB7B",
                   }}
-                  onClick={() => history.push("/admin/adddevice/:id")}
+                  onClick={() => history.push("/admin/adddevice")}
                 >
                   ADD
                 </Button>
                 <Button
-                  className="btn-fill mr-3"
+                  className="btn-fill  mr-3"
                   type="submit"
                   variant="info"
                   onClick={() => {
-                    setDeviceData(
-                      deviceData.map((item) => {
+                    setTableData(
+                      tableData.map((item) => {
                         if (item.Checked === true) {
-                          item.Status = true;
+                          item.status = true;
+                          updateDevice(item)
+                            .then(function (response) {
+                              console.log(response);
+                            })
+                            .catch(function (error) {
+                              console.log(error);
+                            });
                           item.Checked = false;
                         }
                         return item;
@@ -127,10 +136,17 @@ const Device = () => {
                   type="submit"
                   variant="danger"
                   onClick={() => {
-                    setDeviceData(
-                      deviceData.map((item) => {
+                    setTableData(
+                      tableData.map((item) => {
                         if (item.Checked === true) {
-                          item.Status = false;
+                          item.status = false;
+                          updateDevice(item)
+                            .then(function (response) {
+                              console.log(response);
+                            })
+                            .catch(function (error) {
+                              console.log(error);
+                            });
                           item.Checked = false;
                         }
                         return item;
@@ -147,15 +163,14 @@ const Device = () => {
                       type="text"
                       className="mt-4"
                       placeholder="Search"
-                      onChange={onChangeHandler}
+                      onChange={(e) => setToSearch(e.target.value)}
                     ></Form.Control>
                   </Form.Group>
                 </Col>
                 <Table className="table-hover">
                   <thead>
                     <tr>
-                      <th className="border-0"> St </th>
-                      <th className="border-0">Serial No</th>
+                      <th className="border-0"> st </th>
                       <th className="border-0">Device Name</th>
                       <th className="border-0">Battery Status</th>
                       <th className="border-0">Status</th>
@@ -163,33 +178,35 @@ const Device = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredData.map((item, index) => {
+                    {tableData?.map((item, index) => {
+                      if (filterTableData?.includes(item)) {
+                        return;
+                      }
                       return (
-                        <tr key={item.id}>
+                        <tr key={index}>
                           <td>
                             <Form.Control
                               placeholder="Fax"
                               type="checkbox"
                               checked={item.Checked}
                               onChange={() => {
-                                let temp = [...deviceData];
+                                let temp = [...tableData];
                                 temp[index].Checked = !temp[index].Checked;
-                                setDeviceData(temp);
+                                setTableData(temp);
                               }}
                               style={{ width: "16px" }}
                             ></Form.Control>
                           </td>
-                          <td> {index + 1} </td>
                           <td> {item.nameNumber} </td>
                           <td> {item.batteryStatus} </td>
                           <td>
-                            {item.Status ? (
+                            {item.status ? (
                               <Button onClick={() => toggleStatus(index)}>
                                 <i
                                   className="fa fa-toggle-on"
                                   style={{
                                     color: "green",
-                                    textAlign: "left",
+                                    textAlign: "center",
                                   }}
                                 />
                               </Button>
@@ -197,24 +214,25 @@ const Device = () => {
                               <Button onClick={() => toggleStatus(index)}>
                                 <i
                                   className="fa fa-ban"
-                                  style={{ color: "red", textAlign: "left" }}
+                                  style={{ color: "red", textAlign: "center" }}
                                 />
                               </Button>
                             )}
                           </td>
                           <td>
                             <i
-                              className="fa fa-edit mr-3"
+                              className="fa fa-edit"
                               style={{ color: "green" }}
                               onClick={() =>
-                                history.push(`/admin/adddevice/${item.id}`)
+                                history.push("/admin/adddevice/?id=" + item.id)
                               }
                             />
+                            &nbsp; &nbsp;
                             <i
                               className="fa fa-trash red"
                               style={{ color: "red" }}
                               onClick={() => {
-                                onDelete(item.id);
+                                deleteRow(index);
                               }}
                             />
                           </td>
@@ -230,6 +248,6 @@ const Device = () => {
       </Container>
     </>
   );
-};
+}
 
 export default Device;

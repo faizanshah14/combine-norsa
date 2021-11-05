@@ -1,220 +1,204 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { Link, useHistory, useParams } from "react-router-dom";
-import { Button, Form } from "react-bootstrap";
-import _uniqueId from "lodash/uniqueId";
-import addDevicee from "services/device";
-import "../components/Dashboard.css";
+import React from "react";
 
-const addDevice = () => {
-  const [inputdeviceData, setInputDeviceData] = useState({
+// react-bootstrap components
+import { Button, Card, Form, Container, Row, Col } from "react-bootstrap";
+import { useHistory, Link } from "react-router-dom";
+import { useEffect } from "react";
+import { getDeviceSingleData } from "services/device";
+import "../components/Dashboard.css";
+import { updateDevice } from "services/device";
+import getDeviceData from "services/device";
+import { addDeviceData } from "services/device";
+import _uniqueId from "lodash/uniqueId";
+
+function addDevice() {
+  const history = useHistory();
+  const queryParams = new URLSearchParams(window.location.search);
+  const [ClientID, setClientID] = React.useState(null);
+  const [validated, setValidated] = React.useState(false);
+  const [uniqueID] = React.useState(_uniqueId("prefix-"));
+  const [dealers, setDealers] = React.useState([]);
+
+  const [formData, setFormData] = React.useState({
     id: "",
     nameNumber: "",
     batteryStatus: "",
     status: 0,
   });
-
-  const [uniqueID] = React.useState(_uniqueId("prefix-"));
-  const [updateData, setUpdateData] = useState([]);
-
-  const history = useHistory();
-
-  const { id } = useParams();
-  console.log(id, "id");
-
   useEffect(() => {
-    setInputDeviceData({ ...inputdeviceData, ["id"]: uniqueID });
-  }, []);
-
-  const onChangeHandler = (e) => {
-    if (e.target.name == "status") {
-      setInputDeviceData({
-        ...inputdeviceData,
-        [e.target.name]: !inputdeviceData.status,
-      });
-      return;
+    const params = queryParams.get("id");
+    if (params != null) {
+      setClientID(params);
+    } else {
+      setFormData({ ...formData, ["id"]: uniqueID });
     }
-
-    setInputDeviceData({ ...inputdeviceData, [e.target.name]: e.target.value });
-  };
-
-  const onSubmitHandler = (event) => {
-    event.preventDefault();
-
-    addDevicee(inputdeviceData)
+    getDeviceData()
       .then(function (response) {
-        console.log(response);
+        console.log(response.data);
+        setDealers(response.data);
       })
       .catch(function (error) {
         console.log(error);
       });
+  }, []);
+
+  useEffect(() => {
+    if (ClientID == null) return;
+    getDeviceSingleData(ClientID)
+      .then(function (response) {
+        console.log(response);
+        setFormData(response.data);
+      })
+      .catch(function (error) {
+        console.log("cannot fetch the data with an " + error);
+      });
+  }, [ClientID]);
+  const { id, nameNumber, batteryStatus ,  status } = formData;
+
+  const validateInput = (name, value) => {
+    if (name === "nameNumber" || name === "batteryStatus") {
+      let pattern = new RegExp("^[a-zA-Z 0-9_.-]*$");
+      if (pattern.test(value)) {
+        return true;
+      }
+      return "No special characters";
+    }
+
+    return true;
+  };
+
+  const handleInputChange = (e) => {
+    if (e.target.name == "status") {
+      setFormData({ ...formData, [e.target.name]: !status });
+      return;
+    }
+
+    const valid = validateInput(e.target.name, e.target.value);
+    if (valid != true) {
+      alert(valid);
+      return;
+    }
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (ClientID) {
+      updateDevice(formData)
+        .then(function (response) {
+          console.log(response);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    } else {
+      addDeviceData(formData)
+        .then(function (response) {
+          console.log(response);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
 
     history.push("/admin/device");
   };
 
-  // useEffect(() => {
-  //   const token = localStorage.getItem("token");
-  //   console.log(token, "add form token");
-  //   axios
-  //     .get("https://norsabackend.herokuapp.com/api/api/device/getAllDevices", {
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         Authorization: "Bearer" + token,
-  //       },
-  //     })
-  //     .then((res) => {
-  //       const users = res.data;
-  //       setUpdateData(users);
-  //       console.log(users, "form get data");
-  //     })
-  //     .catch((error) => {
-  //       console.error("There is an error!", error);
-  //     });
-  // }, []);
-
-  // useEffect(() => {
-  //   const filteredData = updateData?.find((arr) => arr.id === parseInt(id));
-  //   setInputDeviceData({ ...filteredData });
-  //   // eslint-disable-next-line
-  // }, [id, updateData]);
-
-  // const onSubmitHandler = (e) => {
-  //   e.preventDefault();
-  //   const token = localStorage.getItem("token");
-
-  //   const newuser = {
-  //     id: inputdeviceData.id,
-  //     nameNumber: inputdeviceData.nameNumber,
-  //     batteryStatus: inputdeviceData.batteryStatus,
-  //     status: inputdeviceData.status,
-  //   };
-
-  //   const edituser = {
-  //     id: inputdeviceData.id,
-  //     nameNumber: inputdeviceData.nameNumber,
-  //     batteryStatus: inputdeviceData.batteryStatus,
-  //     status: inputdeviceData.status,
-  //   };
-
-  //   if (inputdeviceData?.id) {
-  //     axios
-  //       .post(
-  //         `https://norsabackend.herokuapp.com/api/device/upsertDevice`,
-  //         {
-  //           edituser,
-  //         },
-  //         {
-  //           headers: {
-  //             "Content-Type": "application/json",
-  //             Authorization: "Bearer" + token,
-  //           },
-  //         }
-  //       )
-  //       .then((res) => {
-  //         console.log(res);
-  //         console.log(res.data);
-  //       });
-  //   } else {
-  //     axios
-  //       .post(
-  //         `https://norsabackend.herokuapp.com/api/device/createDevice`,
-  //         {
-  //           newuser,
-  //         },
-  //         {
-  //           headers: {
-  //             "Content-Type": "application/json",
-  //             Authorization: "Bearer" + token,
-  //           },
-  //         }
-  //       )
-  //       .then((res) => {
-  //         console.log(res);
-  //         console.log(res.data);
-  //       });
-  //   }
-  // };
-
   return (
-    <div>
-      <div className="row justify-content-center">
-        <div className="col-6 form-wrapper">
-          <form
-            onSubmit={(e) => {
-              onSubmitHandler(e);
-            }}
-          >
-            <h3 className="text-center m-5">Device</h3>
-            <div className="form-row">
-              <div className="form-group col-md-12">
-                <label for="namenumber">Device Name</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="namenumber"
-                  placeholder="Number"
-                  name="nameNumber"
-                  value={inputdeviceData.nameNumber}
-                  onChange={(e) => onChangeHandler(e)}
-                  // pattern="[a-zA-Z0-9_.- ]+"
-                  required
-                />
-              </div>
-              <div className="form-group col-md-12">
-                <label for="batteryStatus">Battery Status</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="batteryStatus"
-                  placeholder="Battery Status"
-                  name="batteryStatus"
-                  value={inputdeviceData.batteryStatus}
-                  onChange={(e) => onChangeHandler(e)}
-                  // pattern="[a-zA-Z0-9_.- ]+"
-                  required
-                />
-              </div>
-            </div>
-            <div className="form-group radio-div ml-1">
-              <label for="status" className="mr-5 mt-2 mb-3">
-                Status
-              </label>
-              <Form.Check
-                inline
-                label="Active"
-                name="group1"
-                type="Radio"
-                className="mr-5"
-                name="status"
-                checked={inputdeviceData.status}
-                onClick={(e) => {
-                  onChangeHandler(e);
-                }}
-              />
-            </div>
-            <div className="mt-5 text-center">
-              <Button
-                className="btn-fill mr-3"
-                style={{
-                  backgroundColor: "#3AAB7B",
-                  border: "1px solid #3AAB7B",
-                }}
-                type="submit"
-              >
-                Save
-              </Button>
-              <Link to="/admin/device">
-                <Button className="btn-fill" variant="danger">
-                  Back
-                </Button>
-              </Link>
-            </div>
-          </form>
-          <div></div>
-        </div>
-      </div>
-    </div>
+    <>
+      <Container>
+        <Row className="justify-content-center">
+          <Col md="8">
+            <Card className="form-wrapper mt-4">
+              <Card.Header style={{ backgroundColor: "#F7F7F8" }}>
+                <Card.Title as="h3" className="text-center m-3">
+                  Device
+                </Card.Title>
+              </Card.Header>
+              <Card.Body>
+                <Form onSubmit={handleSubmit}>
+                  <Row>
+                    <Col md="12">
+                      <Form.Group>
+                        <label>Device Name</label>
+                        <Form.Control
+                          required
+                          placeholder="Nomber"
+                          type="text"
+                          value={nameNumber}
+                          name="nameNumber"
+                          onChange={(e) => handleInputChange(e)}
+                        ></Form.Control>
+                        <Form.Control.Feedback type="invalid">
+                          Please provide a value.
+                        </Form.Control.Feedback>
+                      </Form.Group>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col md="12">
+                      <Form.Group>
+                        <label>Battery Status</label>
+                        <Form.Control
+                          required
+                          placeholder="Battery Status"
+                          type="text"
+                          value={batteryStatus}
+                          name="batteryStatus"
+                          onChange={(e) => handleInputChange(e)}
+                        ></Form.Control>
+                        <Form.Control.Feedback type="invalid">
+                          Please provide a value.
+                        </Form.Control.Feedback>
+                      </Form.Group>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col className="pr-1 d-flex" md="12">
+                      <label className="mr-5 mt-1">Status</label>
+                      <Form.Check
+                        inline
+                        label="Active"
+                        name="group1"
+                        type="Radio"
+                        className="mr-5"
+                        name="status"
+                        checked={status}
+                        onClick={(e) => {
+                          handleInputChange(e);
+                        }}
+                      />
+                    </Col>
+                  </Row>
+                  <Row className="text-center mt-2">
+                    <Col md="12">
+                      <Button
+                        className="btn-fill mr-3"
+                        type="submit"
+                        style={{
+                          backgroundColor: "#3AAB7B",
+                          border: "2px solid #3AAB7B",
+                        }}
+                      >
+                        Save
+                      </Button>
+                      <Link to="/admin/device">
+                        <Button className="btn-fill" variant="danger">
+                          Back
+                        </Button>
+                      </Link>
+                    </Col>
+                  </Row>
+
+                  <div className="clearfix"></div>
+                </Form>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+      </Container>
+    </>
   );
-};
+}
 
 export default addDevice;

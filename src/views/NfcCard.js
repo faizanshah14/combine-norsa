@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
-import axios from "axios";
+import React from "react";
+
+// react-bootstrap components
 import {
   Button,
   Form,
@@ -10,78 +10,76 @@ import {
   Row,
   Col,
 } from "react-bootstrap";
-import { getToken } from "../services/auth";
-import address from "../services/address";
+import { useHistory } from "react-router-dom";
+import { useEffect } from "react";
+import checkUser from "services/auth";
+import getNfcData from "services/nfc";
+import { deleteNfc } from "services/nfc";
+import { updateNfc } from "services/nfc";
 
-const NfcCard = () => {
-  const [nfcData, setNfcData] = useState([]);
-  const [filteredData, setFilteredData] = useState([]);
+function NfcCard() {
+  const [tableData, setTableData] = React.useState([
+    {
+      Checked: false,
+      id: "",
+      name: "",
+      status: "",
+    },
+  ]);
   const history = useHistory();
- 
-  useEffect(() => {
-    const storage = window.localStorage;
-    const token = storage.getItem("token")
-    if (!token) {
-      history.push('/login');
-      return
-    }
-    axios
-      .get(`${address}/api/nfcCard/getAllNfcCards`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token,
-        },
-      })
-      .then((res) => {
-        const users = res.data;
-        console.log(users, "userrrr");
-        setNfcData(users);
-      })
-      .catch((error) => {
-        console.error("error message", error.message);
-      });
-  }, []);
+  const [toSearch, setToSearch] = React.useState("");
+  const [filterTableData, setFilterTableData] = React.useState([]);
 
   useEffect(() => {
-    if (nfcData.length) setFilteredData(nfcData);
-  }, [nfcData]);
-
-  const onChangeHandler = (e) => {
-    let result = [];
-    const value = e.target.value;
-    if (value.length >= 1) {
-      result = nfcData.filter((character) => {
-        return character.number.toLowerCase().startsWith(value.toLowerCase());
-      });
-      setFilteredData(result);
-    } else {
-      setFilteredData(nfcData);
+    if (!checkUser()) {
+      history.push("/login");
+      return;
     }
-  };
+    setFilterTableData([]);
+    getNfcData()
+      .then(function (response) {
+        console.log(response.data);
+        setTableData(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }, [tableData]);
+
+  useEffect(() => {
+    let tempTable = [];
+    tableData.map((item, index) => {
+      if (item?.number?.includes(toSearch)) {
+      } else {
+        tempTable.push(item);
+      }
+    });
+    setFilterTableData(tempTable);
+  }, [toSearch]);
 
   const toggleStatus = (index) => {
-    let tempTable = [...nfcData];
-    tempTable[index].Status = !tempTable[index].Status;
-    setNfcData(tempTable);
+    let tempTable = [...tableData];
+    tempTable[index].status = !tempTable[index].status;
+    updateNfc(tempTable[index])
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
+    setTableData(tempTable);
   };
 
-  const onDelete = (index) => {
-    const token = getToken();
-    axios
-      .delete(
-        `${address}/api/nfcCard/deleteNfcCard/${index}`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token,
-        },
+  const deleteRow = (itemToDelete) => {
+    deleteNfc(tableData[itemToDelete].id)
+      .then(function (response) {
+        console.log(response);
       })
-      .then((res) => {
-        const persons = res.data;
-        console.log(persons, "deleted data");
-        // filtering for deleted item
-        const filterdNfcData = nfcData.filter((item) => item.id !== index);
-        setNfcData(filterdNfcData);
+      .catch(function (error) {
+        console.log(error);
       });
+    setTableData(tableData.filter((item, index) => index !== itemToDelete));
   };
 
   return (
@@ -95,25 +93,32 @@ const NfcCard = () => {
               </Card.Header>
               <Card.Body className="table-full-width table-responsive px-0">
                 <Button
-                  className="btn-fill pull-right ml-3 mr-3 mb-4"
+                  className="btn-fill ml-3 mr-3"
                   type="submit"
                   style={{
                     backgroundColor: "#3AAB7B",
                     border: "1px solid #3AAB7B",
                   }}
-                  onClick={() => history.push("/admin/addnfccard/:id")}
+                  onClick={() => history.push("/admin/addnfccard")}
                 >
                   ADD
                 </Button>
                 <Button
-                  className="btn-fill mr-3 mb-4 "
+                  className="btn-fill  mr-3"
                   type="submit"
                   variant="info"
                   onClick={() => {
-                    setNfcData(
-                      nfcData.map((item) => {
+                    setTableData(
+                      tableData.map((item) => {
                         if (item.Checked === true) {
-                          item.Status = true;
+                          item.status = true;
+                          updateNfc(item)
+                            .then(function (response) {
+                              console.log(response);
+                            })
+                            .catch(function (error) {
+                              console.log(error);
+                            });
                           item.Checked = false;
                         }
                         return item;
@@ -124,14 +129,21 @@ const NfcCard = () => {
                   Active
                 </Button>
                 <Button
-                  className="btn-fill mb-4"
+                  className="btn-fill"
                   type="submit"
                   variant="danger"
                   onClick={() => {
-                    setNfcData(
-                      nfcData.map((item) => {
+                    setTableData(
+                      tableData.map((item) => {
                         if (item.Checked === true) {
-                          item.Status = false;
+                          item.status = false;
+                          updateNfc(item)
+                            .then(function (response) {
+                              console.log(response);
+                            })
+                            .catch(function (error) {
+                              console.log(error);
+                            });
                           item.Checked = false;
                         }
                         return item;
@@ -146,42 +158,45 @@ const NfcCard = () => {
                   <Form.Group>
                     <Form.Control
                       type="text"
+                      className="mt-4"
                       placeholder="Search"
-                      onChange={onChangeHandler}
+                      onChange={(e) => setToSearch(e.target.value)}
                     ></Form.Control>
                   </Form.Group>
                 </Col>
                 <Table className="table-hover">
                   <thead>
                     <tr>
-                      <th className="border-0 "> st </th>
-                      <th className="border-0 ">Serial No</th>
-                      <th className="border-0 ">Nomber</th>
-                      <th className="border-0 ">Status</th>
-                      <th className="border-0 ">Actions</th>
+                      <th className="border-0"> st </th>
+                      <th className="border-0">Nomber</th>
+                      <th className="border-0">Status</th>
+                      <th className="border-0">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredData.map((item, index) => {
+                    {tableData?.map((item, index) => {
+                      if (filterTableData?.includes(item)) {
+                        return;
+                      }
                       return (
-                        <tr key={item.id}>
+                        <tr key={index}>
                           <td>
                             <Form.Control
                               placeholder="Fax"
                               type="checkbox"
                               checked={item.Checked}
                               onChange={() => {
-                                let temp = [...nfcData];
+                                let temp = [...tableData];
                                 temp[index].Checked = !temp[index].Checked;
-                                setNfcData(temp);
+                                setTableData(temp);
                               }}
                               style={{ width: "16px" }}
                             ></Form.Control>
                           </td>
-                          <td> {index + 1} </td>
                           <td> {item.number} </td>
+
                           <td>
-                            {item.Status ? (
+                            {item.status ? (
                               <Button onClick={() => toggleStatus(index)}>
                                 <i
                                   className="fa fa-toggle-on"
@@ -202,17 +217,18 @@ const NfcCard = () => {
                           </td>
                           <td>
                             <i
-                              className="fa fa-edit mr-3"
+                              className="fa fa-edit"
                               style={{ color: "green" }}
                               onClick={() =>
-                                history.push(`/admin/addnfccard/${item.id}`)
+                                history.push("/admin/addnfccard/?id=" + item.id)
                               }
                             />
+                            &nbsp; &nbsp;
                             <i
                               className="fa fa-trash red"
                               style={{ color: "red" }}
                               onClick={() => {
-                                onDelete(item.id);
+                                deleteRow(index);
                               }}
                             />
                           </td>
@@ -228,6 +244,6 @@ const NfcCard = () => {
       </Container>
     </>
   );
-};
+}
 
 export default NfcCard;
