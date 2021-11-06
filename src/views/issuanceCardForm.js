@@ -28,7 +28,7 @@ function IssuanceCardForm() {
   const queryParams = new URLSearchParams(window.location.search);
   const [ClientID, setClientID] = React.useState();
   const [validated, setValidated] = React.useState(false);
-  const [allClients, setAllClients] = React.useState([])
+  const [allClients, setAllClients] = React.useState([{}])
   const [allNfcCards, setAllNfcCards] = React.useState([])
   const [allMerchants, setAllMerchants] = React.useState([])
   const [uniqueID] = React.useState(_uniqueId("prefix-"))
@@ -41,7 +41,6 @@ function IssuanceCardForm() {
     NfcCard_id: "",
     Merchants_id: "",
     id: "",
-    status: "",
   });
   const {
     DateTime,
@@ -65,6 +64,7 @@ function IssuanceCardForm() {
     getMerchantList().
       then(function (response) {
         console.log(response.data)
+        response.data.unshift({})
         setAllMerchants(response.data)
       })
       .catch(function (error) {
@@ -73,6 +73,7 @@ function IssuanceCardForm() {
     getClientList().
       then(function (response) {
         console.log(response.data)
+        response.data.unshift({})
         setAllClients(response.data)
       })
       .catch(function (error) {
@@ -80,6 +81,7 @@ function IssuanceCardForm() {
       })
     getNfcList()
       .then(function (response) {
+        response.data.unshift({})
         setAllNfcCards(response.data)
       })
       .catch(function (error) {
@@ -94,6 +96,7 @@ function IssuanceCardForm() {
         getMerchantTypeDiscountByMerchantType_id(response.data.MerchantType_id)
           .then(function (response) {
             console.log(response)
+            response.data.unshift({})
             setAllPaybackPeriodsOfCurrentMerchant(response.data)
           })
           .catch(function (error) {
@@ -312,22 +315,7 @@ function IssuanceCardForm() {
                       </Form.Group>
                     </Col>
                   </Row>
-                  <Row>
-                    <Col className="pr-1" md="12">
-                      <Form.Check
-                        inline
-                        label="Active"
-                        name="group1"
-                        type="Radio"
-                        className="mr-5"
-                        name="status"
-                        checked={status}
-                        onClick={(e) => {
-                          handleInputChange(e);
-                        }}
-                      />
-                    </Col>
-                  </Row>
+                  
                   <Row className="text-center mt-2">
                     <Col md="12">
                       <Button

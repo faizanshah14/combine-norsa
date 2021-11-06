@@ -54,6 +54,7 @@ function ClientForm() {
     getClientList().
       then(function (response) {
         console.log(response.data)
+        response.data.unshift({})
         setDealers(response.data)
       })
       .catch(function (error) {
