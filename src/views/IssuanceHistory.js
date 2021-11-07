@@ -18,6 +18,7 @@ import { useEffect } from "react";
 import { getissuancehistoryByClientId } from "services/issuanceHistory";
 import { getMerchantData } from "services/merchant";
 import { getClientData } from "services/client";
+import { getNfcSingleData } from "services/nfc";
 
 function IssuanceHistory() {
   const [tableData, setTableData] = React.useState([{
@@ -30,10 +31,13 @@ function IssuanceHistory() {
     id: "",
     status: "",
   }])
+
   const [ClientID, setClientID] = React.useState(null);
   const history = useHistory();
   const [status, setStatus] = React.useState(false)
   const queryParams = new URLSearchParams(window.location.search);
+  const [clientName, setClientName] = React.useState(null)
+  const [merchantName, setMerchantName] = React.useState(null)
 
   const params = queryParams.get("id");
 
@@ -42,7 +46,26 @@ function IssuanceHistory() {
 
     getissuancehistoryByClientId(ClientID)
       .then(function (response) {
-        setTableData(response.data)
+        const temp = Promise.all(response.data.map(async (item, index) => {
+
+          const merchantData = await getMerchantData(item.Merchants_id)
+          item.Merchants_id = merchantData.data.Name
+          const nfcData = await getNfcSingleData(item.NfcCard_id)
+          item.NfcCard_id = nfcData.data.number
+          const clientData = await getClientData(ClientID)
+          item.Client_id = clientData.data.Code
+          // getNfcSingleData(item.NfcCard_id)
+          //   .then(function (response) {
+          //     item.NfcCard_id = response.data.number
+          //   })
+          //   .catch(function (error) {
+          //   });
+
+          return item
+        }))
+        temp.then(function(response){
+          setTableData(response)
+        })
       })
       .catch(function (error) {
         console.log(error)
@@ -56,6 +79,8 @@ function IssuanceHistory() {
     }
 
   }, [])
+
+
 
   const toggleStatus = (index) => {
     let tempTable = [...tableData]
