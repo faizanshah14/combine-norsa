@@ -15,7 +15,7 @@ import {
 } from "react-bootstrap";
 import { useHistory } from 'react-router-dom';
 import { useEffect } from "react";
-import { getIssuanceHistoryList } from "services/issuanceHistory";
+import { getissuancehistoryByClientId } from "services/issuanceHistory";
 import { getMerchantData } from "services/merchant";
 import { getClientData } from "services/client";
 
@@ -30,65 +30,30 @@ function IssuanceHistory() {
     id: "",
     status: "",
   }])
-
+  const [ClientID, setClientID] = React.useState(null);
   const history = useHistory();
   const [status, setStatus] = React.useState(false)
+  const queryParams = new URLSearchParams(window.location.search);
+
+  const params = queryParams.get("id");
 
   useEffect(() => {
-    getIssuanceHistoryList()
-      .then(async function (response) {
-        let tempData = response.data
-        setTableData(tempData.map((item, index) => {
-          let Merchants_id = ""
-          let Client_id = ""
-          getMerchantData(item.Merchants_id)
-            .then(function (response) {
-              Merchants_id = response.data.Name
-            })
-            .catch(function (error) {
+    if (!ClientID) return
 
-            })
-          getClientData(item.Client_id)
-            .then(function (response) {
-              Client_id = response.data.Code
-            })
-            .catch(function (error) {
-
-            })
-
-          return { Merchants_id, Client_id }
-
-        }))
-        console.log(tempData)
-        setTableData(tempData)
+    getissuancehistoryByClientId(ClientID)
+      .then(function (response) {
+        setTableData(response.data)
       })
       .catch(function (error) {
         console.log(error)
       })
-    // setTableData([{
-    //   Code: "1", FirstName: "shaffan", LastName: "nasir", WorkNo: "none", ContactNo: "0332", WorksAt: "Fast", Email: "shaffan@gmail.com",
-    //   FaxNumber: "None", Fax: "None", Status: false, MaxBorrowAmount: "100", Dealer_id: "1",
-    // },
-    // {
-    //   Code: "2", FirstName: "shaffan", LastName: "nasir", WorkNo: "none", ContactNo: "0332", WorksAt: "Fast", Email: "shaffan@gmail.com",
-    //   FaxNumber: "None", Fax: "None", Status: false, MaxBorrowAmount: "100", Dealer_id: "1",
-    // },
-    // {
-    //   Code: "3", FirstName: "shaffan", LastName: "nasir", WorkNo: "none", ContactNo: "0332", WorksAt: "Fast", Email: "shaffan@gmail.com",
-    //   FaxNumber: "None", Fax: "None", Status: false, MaxBorrowAmount: "100", Dealer_id: "1",
-    // },
-    // {
-    //   Code: "4", FirstName: "shaffan", LastName: "nasir", WorkNo: "none", ContactNo: "0332", WorksAt: "Fast", Email: "shaffan@gmail.com",
-    //   FaxNumber: "None", Fax: "None", Status: false, MaxBorrowAmount: "100", Dealer_id: "1",
-    // },
-    // {
-    //   Code: "5", FirstName: "shaffan", LastName: "nasir", WorkNo: "none", ContactNo: "0332", WorksAt: "Fast", Email: "shaffan@gmail.com",
-    //   FaxNumber: "None", Fax: "None", Status: false, MaxBorrowAmount: "100", Dealer_id: "1",
-    // },
-    // {
-    //   Code: "6", FirstName: "shaffan", LastName: "nasir", WorkNo: "none", ContactNo: "0332", WorksAt: "Fast", Email: "shaffan@gmail.com",
-    //   FaxNumber: "None", Fax: "None", Status: false, MaxBorrowAmount: "100", Dealer_id: "1",
-    // },])
+
+
+  }, [ClientID])
+  useEffect(() => {
+    if (params != null) {
+      setClientID(params);
+    }
 
   }, [])
 

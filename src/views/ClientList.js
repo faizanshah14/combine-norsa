@@ -281,7 +281,7 @@ function ClientList() {
                             <Button
                               onClick={() =>
                                 history.push(
-                                  "/admin/IssuanceHistory/?id=" + index
+                                  "/admin/IssuanceHistory/?id=" + item.id
                                 )
                               }
                             >
