@@ -24,6 +24,7 @@ function IssuanceHistory() {
   const [tableData, setTableData] = React.useState([{
     DateTime: "",
     Amount: "",
+    AmountPaid : "",
     PaybackPeriod: "",
     Client_id: "",
     NfcCard_id: "",
@@ -43,9 +44,11 @@ function IssuanceHistory() {
 
   useEffect(() => {
     if (!ClientID) return
+    
 
     getissuancehistoryByClientId(ClientID)
       .then(function (response) {
+        console.log(response)
         const temp = Promise.all(response.data.map(async (item, index) => {
 
           const merchantData = await getMerchantData(item.Merchants_id)
@@ -54,13 +57,6 @@ function IssuanceHistory() {
           item.NfcCard_id = nfcData.data.number
           const clientData = await getClientData(ClientID)
           item.Client_id = clientData.data.Code
-          // getNfcSingleData(item.NfcCard_id)
-          //   .then(function (response) {
-          //     item.NfcCard_id = response.data.number
-          //   })
-          //   .catch(function (error) {
-          //   });
-
           return item
         }))
         temp.then(function(response){
@@ -132,6 +128,7 @@ function IssuanceHistory() {
                       <th className="border-0">Fetcha</th>
                       <th className="border-0">Kliente</th>
                       <th className="border-0">Montante </th>
+                      <th className="border-0">Montante Paid</th>
                       <th className="border-0">Periodo di Pago </th>
                       <th className="border-0">Nfc Card </th>
                       <th className="border-0">Negoshi</th>
@@ -146,6 +143,7 @@ function IssuanceHistory() {
                           <td> {item.id} </td>
                           <td> {item.Client_id} </td>
                           <td> {item.Amount} </td>
+                          <td> {item.AmountPaid ? item.AmountPaid : 0} </td>
                           <td> {item.PaybackPeriod} </td>
                           <td> {item.NfcCard_id} </td>
                           <td> {item.Merchants_id} </td>

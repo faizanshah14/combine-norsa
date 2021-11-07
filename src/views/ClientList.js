@@ -224,6 +224,7 @@ function ClientList() {
                       <th className="border-0">Kredito Maksimo</th>
                       <th className="border-0">Status</th>
                       <th className="border-0">Issuance History</th>
+                      <th className="border-0">Pending Payment</th>
                       <th className="border-0">Actions</th>
                     </tr>
                   </thead>
@@ -282,6 +283,20 @@ function ClientList() {
                               onClick={() =>
                                 history.push(
                                   "/admin/IssuanceHistory/?id=" + item.id
+                                )
+                              }
+                            >
+                              <i
+                                className="nc-icon nc-notes"
+                                style={{ color: "black" }}
+                              />
+                            </Button>
+                          </td>
+                          <td align="center">
+                            <Button
+                              onClick={() =>
+                                history.push(
+                                  "/admin/PendingPaymentList/?id=" + item.id
                                 )
                               }
                             >
