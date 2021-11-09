@@ -45,7 +45,7 @@ function Device() {
       .catch(function (error) {
         console.log(error);
       });
-  }, [tableData]);
+  }, []);
 
   useEffect(() => {
     let tempTable = [];
