@@ -22,7 +22,7 @@ function NfcCard() {
     {
       Checked: false,
       id: "",
-      name: "",
+      number: "",
       status: "",
     },
   ]);
@@ -44,7 +44,7 @@ function NfcCard() {
       .catch(function (error) {
         console.log(error);
       });
-  }, [tableData]);
+  }, []);
 
   useEffect(() => {
     let tempTable = [];
