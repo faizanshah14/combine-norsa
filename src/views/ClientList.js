@@ -25,7 +25,7 @@ function ClientList() {
   const [tableData, setTableData] = React.useState([{
     Checked: false,
     id: "", Code: "", FirstName: "", LastName: "", WorkNo: "", ContactNo: "", WorksAt: "", Email: "",
-    FaxNumber: "", Status: "", MaxBorrowAmount: "", Dealer_id: "",
+    FaxNumber: "", Status: 0, MaxBorrowAmount: "", Dealer_id: "",
   }])
   const history = useHistory();
   const [toSearch, setToSearch] = React.useState("")
@@ -105,7 +105,8 @@ function ClientList() {
 
   const toggleStatus = (index) => {
     let tempTable = [...tableData]
-    tempTable[index].Status = !tempTable[index].Status
+
+    tempTable[index].Status = tempTable.Status == 2 ? 1 : !tempTable[index].Status
     updateClient(tempTable[index])
       .then(function (response) {
         console.log(response)
@@ -234,7 +235,7 @@ function ClientList() {
                         return;
                       }
                       return (
-                        <tr key={index}>
+                        <tr key={index} style={item.Status == 2 ?{backgroundColor : "rgb(255,255,167)"} : null}>
                           <td>
                             {" "}
                             <Form.Control
@@ -259,7 +260,7 @@ function ClientList() {
                           <td> {item.MaxBorrowAmount} </td>
                           <td>
                             {" "}
-                            {item.Status ? (
+                            {item.Status == 1 ? (
                               <Button onClick={() => toggleStatus(index)}>
                                 <i
                                   className="fa fa-toggle-on"
@@ -269,7 +270,15 @@ function ClientList() {
                                   }}
                                 />
                               </Button>
-                            ) : (
+                            ) : item.Status == 2 ? <Button onClick={() => toggleStatus(index)}>
+                              <i
+                                className="fa fa-hourglass"
+                                style={{
+                                  color: "black",
+                                  textAlign: "center",
+                                }}
+                              />
+                            </Button> : (
                               <Button onClick={() => toggleStatus(index)}>
                                 <i
                                   className="fa fa-ban"

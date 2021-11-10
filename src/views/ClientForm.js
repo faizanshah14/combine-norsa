@@ -40,7 +40,7 @@ function ClientForm() {
     WorksAt: "",
     Email: "",
     FaxNumber: "",
-    Status: 0,
+    Status: 2,
     MaxBorrowAmount: "",
     Dealer_id: "",
   });
@@ -363,7 +363,7 @@ function ClientForm() {
                       </Form.Group>
                     </Col>
                   </Row>
-                  <Row>
+                  {/* <Row>
                     <Col className="pr-1" md="12">
                       <Form.Check
                         inline
@@ -378,7 +378,7 @@ function ClientForm() {
                         }}
                       />
                     </Col>
-                  </Row>
+                  </Row> */}
                   <Row className="text-center mt-2">
                     <Col md="12">
                       <Button
