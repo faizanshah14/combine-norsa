@@ -235,7 +235,7 @@ function ClientList() {
                         return;
                       }
                       return (
-                        <tr key={index} style={item.Status == 2 ?{backgroundColor : "rgb(255,255,167)"} : null}>
+                        <tr key={index} style={item.Status == 2 ?{backgroundColor : "#7FB5A2"} : null}>
                           <td>
                             {" "}
                             <Form.Control

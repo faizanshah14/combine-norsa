@@ -35,6 +35,7 @@ function ClientForm() {
     Code: "",
     FirstName: "",
     LastName: "",
+    idCard : "",
     WorkNo: "",
     ContactNo: "",
     WorksAt: "",
@@ -43,7 +44,15 @@ function ClientForm() {
     Status: 2,
     MaxBorrowAmount: "",
     Dealer_id: "",
+    SourceOfIncome: "",
+    RecievedCreditInPast: false
   });
+
+  const [fileForm, setFileForm] = React.useState({
+    id : _uniqueId("prefix-"),
+    filePath : "",
+    Client_id : ""
+  })
   useEffect(() => {
     const params = queryParams.get("id");
     if (params != null) {
@@ -81,6 +90,7 @@ function ClientForm() {
     Code,
     FirstName,
     LastName,
+    idCard,
     WorkNo,
     ContactNo,
     WorksAt,
@@ -89,6 +99,8 @@ function ClientForm() {
     Status,
     MaxBorrowAmount,
     Dealer_id,
+    SourceOfIncome,
+    RecievedCreditInPast
   } = formData;
 
   const validateInput = (name, value) => {
@@ -106,7 +118,7 @@ function ClientForm() {
       }
       return "only alphabets and spaces";
     }
-    if (name === "WorkNo" || name === "FaxNumber" || name === "ContactNo") {
+    if (name === "WorkNo" || name === "FaxNumber" || name === "ContactNo" || name == "idCard") {
       let pattern = new RegExp("^[0-9 ]*$");
       if (pattern.test(value)) {
         return true;
@@ -123,7 +135,13 @@ function ClientForm() {
       setFormData({ ...formData, [e.target.name]: !Status });
       return
     }
-
+    if (e.target.name == "RecievedCreditInPast") {
+      setFormData({ ...formData, [e.target.name]: !RecievedCreditInPast });
+      return
+    }
+  const handleFileChange = (e) => {
+    
+  }
 
     const valid = validateInput(e.target.name, e.target.value);
     if (valid != true) {
@@ -140,7 +158,6 @@ function ClientForm() {
     }
     return "not a valid email";
   };
-
   const handleSubmit = (event) => {
     event.preventDefault();
     const valid = validateEmail(Email);
@@ -226,6 +243,24 @@ function ClientForm() {
                           type="text"
                           value={LastName}
                           name="LastName"
+                          onChange={(e) => handleInputChange(e)}
+                        ></Form.Control>
+                        <Form.Control.Feedback type="invalid">
+                          Please provide a value.
+                        </Form.Control.Feedback>
+                      </Form.Group>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col md="12">
+                      <Form.Group>
+                        <label>Sédula</label>
+                        <Form.Control
+                          required
+                          placeholder=""
+                          type="text"
+                          value={idCard}
+                          name="idCard"
                           onChange={(e) => handleInputChange(e)}
                         ></Form.Control>
                         <Form.Control.Feedback type="invalid">
@@ -337,6 +372,55 @@ function ClientForm() {
                     </Col>
                   </Row>
                   <Row>
+                    <Col md="12">
+                      <Form.Group>
+                        <label>Si bo no ta empleá, kiko ta bo medio di entrada ?</label>
+                        <Form.Control
+                          as="textarea"
+                          required
+                          placeholder=""
+                          value={SourceOfIncome}
+                          name="SourceOfIncome"
+                          onChange={(e) => handleInputChange(e)}
+                        ></Form.Control>
+                        <Form.Control.Feedback type="invalid">
+                          Please provide a value.
+                        </Form.Control.Feedback>
+                      </Form.Group>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col md="12">
+                        <label>A yega di tuma bon den pasado kaba? &nbsp;</label>
+                        <br />
+                        <Form.Check
+                        inline
+                        label="Si"
+                        name="group1"
+                        type="Radio"
+                        className="mr-5"
+                        name="RecievedCreditInPast"
+                        checked={RecievedCreditInPast}
+                        onClick={(e) => {
+                          handleInputChange(e);
+                        }}
+                      />
+                      <Form.Check
+                        inline
+                        label="No"
+                        name="group1"
+                        type="Radio"
+                        className="mr-5"
+                        name="RecievedCreditInPast"
+                        checked={!RecievedCreditInPast}
+                        onClick={(e) => {
+                          handleInputChange(e);
+                        }}
+                      />
+                       
+                    </Col>
+                  </Row>
+                  <Row>
                     <Col className="pr-1" md="12">
                       <Form.Group>
                         <label>Rebendedo</label>
@@ -351,9 +435,9 @@ function ClientForm() {
                             handleInputChange(e)
                           }}
                         >
-                          {dealers.map((item) => {
+                          {dealers.map((item,index) => {
                             return (
-                              <option value={item.id}>{item.Code}</option>
+                              <option value={item.id}> Code : {item.Code}</option>
                             )
                           })}
                         </Form.Control>
@@ -363,6 +447,23 @@ function ClientForm() {
                       </Form.Group>
                     </Col>
                   </Row>
+                  <Row>
+                    <Col md="12">
+                      <Form.Group>
+                        <label>Porfabor agrega un potrét di bo Sédula</label>
+                        <Form.Control
+                          required
+                          type="file"
+                          name="profilePicture"
+                        //onChange={(e) => handleInputChange(e)}
+                        ></Form.Control>
+                        <Form.Control.Feedback type="invalid">
+                          Please provide a value.
+                        </Form.Control.Feedback>
+                      </Form.Group>
+                    </Col>
+                  </Row>
+
                   {/* <Row>
                     <Col className="pr-1" md="12">
                       <Form.Check
