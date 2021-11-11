@@ -32,10 +32,11 @@ function ClientForm() {
 
   const [formData, setFormData] = React.useState({
     id: "",
+    Date: "",
     Code: "",
     FirstName: "",
     LastName: "",
-    idCard : "",
+    idCard: "",
     WorkNo: "",
     ContactNo: "",
     WorksAt: "",
@@ -43,15 +44,16 @@ function ClientForm() {
     FaxNumber: "",
     Status: 2,
     MaxBorrowAmount: "",
+    ExpiryDate: "",
     Dealer_id: "",
     SourceOfIncome: "",
     RecievedCreditInPast: false
   });
 
   const [fileForm, setFileForm] = React.useState({
-    id : _uniqueId("prefix-"),
-    filePath : "",
-    Client_id : ""
+    id: _uniqueId("prefix-"),
+    filePath: "",
+    Client_id: ""
   })
   useEffect(() => {
     const params = queryParams.get("id");
@@ -100,7 +102,9 @@ function ClientForm() {
     MaxBorrowAmount,
     Dealer_id,
     SourceOfIncome,
-    RecievedCreditInPast
+    RecievedCreditInPast,
+    Date,
+    ExpiryDate
   } = formData;
 
   const validateInput = (name, value) => {
@@ -139,9 +143,9 @@ function ClientForm() {
       setFormData({ ...formData, [e.target.name]: !RecievedCreditInPast });
       return
     }
-  const handleFileChange = (e) => {
+    const handleFileChange = (e) => {
 
-  }
+    }
 
     const valid = validateInput(e.target.name, e.target.value);
     if (valid != true) {
@@ -202,6 +206,24 @@ function ClientForm() {
               <Card.Body>
                 <Form onSubmit={handleSubmit}>
                   <Row>
+                    <Col  md="12">
+                      <Form.Group>
+                        <label>Date</label>
+                        <Form.Control
+                          required
+                          placeholder="123"
+                          type="date"
+                          value={Date}
+                          name="Date"
+                          onChange={(e) => handleInputChange(e)}
+                        ></Form.Control>
+                        <Form.Control.Feedback type="invalid">
+                          Please provide a value.
+                        </Form.Control.Feedback>
+                      </Form.Group>
+                    </Col>
+                  </Row>
+                  <Row>
                     <Col className="pr-1" md="2">
                       <Form.Group>
                         <label>Code</label>
@@ -252,7 +274,7 @@ function ClientForm() {
                     </Col>
                   </Row>
                   <Row>
-                    <Col md="12">
+                    <Col md="6">
                       <Form.Group>
                         <label>Sédula</label>
                         <Form.Control
@@ -261,6 +283,22 @@ function ClientForm() {
                           type="text"
                           value={idCard}
                           name="idCard"
+                          onChange={(e) => handleInputChange(e)}
+                        ></Form.Control>
+                        <Form.Control.Feedback type="invalid">
+                          Please provide a value.
+                        </Form.Control.Feedback>
+                      </Form.Group>
+                    </Col>
+                    <Col  md="6">
+                      <Form.Group>
+                        <label>Expiry Date</label>
+                        <Form.Control
+                          required
+                          placeholder="123"
+                          type="date"
+                          value={ExpiryDate}
+                          name="ExpiryDate"
                           onChange={(e) => handleInputChange(e)}
                         ></Form.Control>
                         <Form.Control.Feedback type="invalid">
@@ -306,7 +344,7 @@ function ClientForm() {
                   <Row>
                     <Col md="12">
                       <Form.Group>
-                        <label>Ta taraha na</label>
+                        <label>Ta Empleá Na</label>
                         <Form.Control
                           required
                           placeholder="Ta taraha na"
@@ -342,7 +380,7 @@ function ClientForm() {
                       <Form.Group>
                         <label>Email</label>
                         <Form.Control
-                          
+
                           placeholder="Email"
                           type="text"
                           value={Email}
@@ -391,9 +429,9 @@ function ClientForm() {
                   </Row>
                   <Row>
                     <Col md="12">
-                        <label>A yega di tuma bon den pasado kaba? &nbsp;</label>
-                        <br />
-                        <Form.Check
+                      <label>A yega di tuma bon den pasado kaba? &nbsp;</label>
+                      <br />
+                      <Form.Check
                         inline
                         label="Si"
                         name="group1"
@@ -417,7 +455,7 @@ function ClientForm() {
                           handleInputChange(e);
                         }}
                       />
-                       
+
                     </Col>
                   </Row>
                   <Row>
@@ -435,7 +473,7 @@ function ClientForm() {
                             handleInputChange(e)
                           }}
                         >
-                          {dealers.map((item,index) => {
+                          {dealers.map((item, index) => {
                             return (
                               <option value={item.id}> Code : {item.Code}</option>
                             )
@@ -452,7 +490,7 @@ function ClientForm() {
                       <Form.Group>
                         <label>Porfabor agrega un potrét di bo Sédula</label>
                         <Form.Control
-                          
+
                           type="file"
                           name="profilePicture"
                         //onChange={(e) => handleInputChange(e)}
