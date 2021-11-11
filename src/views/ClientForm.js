@@ -20,6 +20,7 @@ import { updateClient } from "services/client";
 import getClientList from "services/client";
 import { addClient } from "services/client";
 import _uniqueId from 'lodash/uniqueId';
+import { getActiveClientList } from "services/client";
 
 
 function ClientForm() {
@@ -62,7 +63,8 @@ function ClientForm() {
     } else {
       setFormData({ ...formData, ["id"]: uniqueID })
     }
-    getClientList().
+
+    getActiveClientList().
       then(function (response) {
         console.log(response.data)
         response.data.unshift({})
@@ -206,7 +208,7 @@ function ClientForm() {
               <Card.Body>
                 <Form onSubmit={handleSubmit}>
                   <Row>
-                    <Col  md="12">
+                    <Col md="12">
                       <Form.Group>
                         <label>Date</label>
                         <Form.Control
@@ -290,7 +292,7 @@ function ClientForm() {
                         </Form.Control.Feedback>
                       </Form.Group>
                     </Col>
-                    <Col  md="6">
+                    <Col md="6">
                       <Form.Group>
                         <label>Expiry Date</label>
                         <Form.Control
