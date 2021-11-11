@@ -140,7 +140,7 @@ function ClientForm() {
       return
     }
   const handleFileChange = (e) => {
-    
+
   }
 
     const valid = validateInput(e.target.name, e.target.value);
@@ -342,7 +342,7 @@ function ClientForm() {
                       <Form.Group>
                         <label>Email</label>
                         <Form.Control
-                          required
+                          
                           placeholder="Email"
                           type="text"
                           value={Email}
@@ -452,7 +452,7 @@ function ClientForm() {
                       <Form.Group>
                         <label>Porfabor agrega un potrét di bo Sédula</label>
                         <Form.Control
-                          required
+                          
                           type="file"
                           name="profilePicture"
                         //onChange={(e) => handleInputChange(e)}
