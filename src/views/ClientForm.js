@@ -33,7 +33,7 @@ function ClientForm() {
 
   const [formData, setFormData] = React.useState({
     id: "",
-    Date: "",
+    Date: "2021-01-01",
     Code: "",
     FirstName: "",
     LastName: "",
@@ -157,6 +157,7 @@ function ClientForm() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
   const validateEmail = (email) => {
+    if(email.length < 1 ) return true
     let pattern =
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if (pattern.test(email)) {
@@ -207,24 +208,24 @@ function ClientForm() {
               </Card.Header>
               <Card.Body>
                 <Form onSubmit={handleSubmit}>
-                  <Row>
-                    <Col md="12">
-                      <Form.Group>
-                        <label>Date</label>
-                        <Form.Control
-                          required
-                          placeholder="123"
-                          type="date"
-                          value={Date}
-                          name="Date"
-                          onChange={(e) => handleInputChange(e)}
-                        ></Form.Control>
-                        <Form.Control.Feedback type="invalid">
-                          Please provide a value.
-                        </Form.Control.Feedback>
-                      </Form.Group>
-                    </Col>
-                  </Row>
+//                   <Row>
+//                     <Col md="12">
+//                       <Form.Group>
+//                         <label>Date</label>
+//                         <Form.Control
+//                           required
+//                           placeholder="123"
+//                           type="date"
+//                           value={Date}
+//                           name="Date"
+//                           onChange={(e) => handleInputChange(e)}
+//                         ></Form.Control>
+//                         <Form.Control.Feedback type="invalid">
+//                           Please provide a value.
+//                         </Form.Control.Feedback>
+//                       </Form.Group>
+//                     </Col>
+//                   </Row>
                   <Row>
                     <Col className="pr-1" md="2">
                       <Form.Group>
@@ -294,7 +295,7 @@ function ClientForm() {
                     </Col>
                     <Col md="6">
                       <Form.Group>
-                        <label>Expiry Date</label>
+                        <label>Fetcha di Vensementu</label>
                         <Form.Control
                           required
                           placeholder="123"
