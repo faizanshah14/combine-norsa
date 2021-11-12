@@ -202,7 +202,7 @@ function ClientForm() {
             <Card className="form-wrapper mt-4">
               <Card.Header style={{ backgroundColor: "#F7F7F8" }}>
                 <Card.Title as="h3" className="text-center m-3">
-                  Ciode di Kliente
+                  Formulario di Registrashon
                 </Card.Title>
               </Card.Header>
               <Card.Body>
