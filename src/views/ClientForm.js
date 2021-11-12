@@ -21,6 +21,8 @@ import getClientList from "services/client";
 import { addClient } from "services/client";
 import _uniqueId from 'lodash/uniqueId';
 import { getActiveClientList } from "services/client";
+import { getNextId } from "services/client";
+import { getNextDId } from "services/client";
 
 
 function ClientForm() {
@@ -30,7 +32,7 @@ function ClientForm() {
   const [validated, setValidated] = React.useState(false);
   const [uniqueID] = React.useState(_uniqueId("prefix-"))
   const [dealers, setDealers] = React.useState([])
-
+  const [typeOfClient, setTypeOfClient] = React.useState()
   const [formData, setFormData] = React.useState({
     id: "",
     Date: "2021-01-01",
@@ -38,8 +40,8 @@ function ClientForm() {
     FirstName: "",
     LastName: "",
     idCard: "",
-    WorkNo: "",
-    ContactNo: "",
+    WorkNo: "+5999 ",
+    ContactNo: "+5999 ",
     WorksAt: "",
     Email: "",
     FaxNumber: "",
@@ -60,10 +62,7 @@ function ClientForm() {
     const params = queryParams.get("id");
     if (params != null) {
       setClientID(params);
-    } else {
-      setFormData({ ...formData, ["id"]: uniqueID })
     }
-
     getActiveClientList().
       then(function (response) {
         console.log(response.data)
@@ -75,6 +74,24 @@ function ClientForm() {
       })
 
   }, []);
+  useEffect(() => {
+    if (typeOfClient == 0) {
+      getNextId().then(function (response) {
+        setFormData({ ...formData, ["id"]: response.data.id, ["Code"]: response.data.id })
+      }).catch(function (error) {
+        console.log(error)
+      })
+    }
+    else if (typeOfClient == 1) {
+      // getNextDId().then(function (response) {
+      //   setFormData({ ...formData, ["id"]: response.data.id, ["Code"]: response.data.id })
+      // }).catch(function (error) {
+      //   console.log(error)
+      // })
+      setFormData({ ...formData, ["id"]: "D-", ["Code"]: "D-" })
+
+    }
+  }, [typeOfClient])
 
   useEffect(() => {
     if (ClientID == null) return
@@ -125,7 +142,7 @@ function ClientForm() {
       return "only alphabets and spaces";
     }
     if (name === "WorkNo" || name === "FaxNumber" || name === "ContactNo" || name == "idCard") {
-      let pattern = new RegExp("^[0-9 ]*$");
+      let pattern = new RegExp("^[0-9 +]*$");
       if (pattern.test(value)) {
         return true;
       }
@@ -145,10 +162,14 @@ function ClientForm() {
       setFormData({ ...formData, [e.target.name]: !RecievedCreditInPast });
       return
     }
-    const handleFileChange = (e) => {
-
+    if (e.target.name == "Code") {
+      if (e.target.value.length < 2) return
+      setFormData({ ...formData, [e.target.name]: e.target.value, id: e.target.value });
+      return
     }
-
+    if (e.target.name == "WorkNo" || e.target.name == "ContactNo") {
+      if (e.target.value.length < 6) return
+    }
     const valid = validateInput(e.target.name, e.target.value);
     if (valid != true) {
       alert(valid);
@@ -157,7 +178,7 @@ function ClientForm() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
   const validateEmail = (email) => {
-    if(email.length < 1 ) return true
+    if (email.length < 1) return true
     let pattern =
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if (pattern.test(email)) {
@@ -197,7 +218,7 @@ function ClientForm() {
 
   return (
     <>
-      <Container>
+      {queryParams.get("id") != null ? null : <Container>
         <Row className="justify-content-center">
           <Col md="8">
             <Card className="form-wrapper mt-4">
@@ -205,6 +226,46 @@ function ClientForm() {
                 <Card.Title as="h3" className="text-center m-3">
                   Formulario di Registrashon
                 </Card.Title>
+              </Card.Header>
+              <Card.Body>
+                <Form onSubmit={handleSubmit}>
+                  <Row>
+                    <Col md="12">
+                      <Form.Group>
+                        <label>Type Of Kliente</label>
+                        <Form.Control
+                          as="select"
+                          defaultValue=""
+                          value={typeOfClient}
+                          name="Dealer_id"
+                          onChange={e => {
+                            setTypeOfClient(e.target.value)
+                          }}
+                        >
+                          <option></option>
+                          <option value={0}> Client</option>
+                          <option value={1}> Dealer</option>
+                        </Form.Control>
+                        <Form.Control.Feedback type="invalid">
+                          Please provide a value.
+                        </Form.Control.Feedback>
+                      </Form.Group>
+                    </Col>
+                  </Row>
+                </Form>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+      </Container>}
+      {(typeOfClient || queryParams.get("id")) && <Container>
+        <Row className="justify-content-center">
+          <Col md="8">
+            <Card className="form-wrapper mt-4">
+              <Card.Header style={{ backgroundColor: "#F7F7F8" }}>
+                {queryParams.get("id") == null ? null : <Card.Title as="h3" className="text-center m-3">
+                  Formulario di Registrashon
+                </Card.Title>}
               </Card.Header>
               <Card.Body>
                 <Form onSubmit={handleSubmit}>
@@ -231,6 +292,7 @@ function ClientForm() {
                       <Form.Group>
                         <label>Code</label>
                         <Form.Control
+                          disabled={typeOfClient == 0 || ClientID ? true : false}
                           required
                           placeholder="123"
                           type="text"
@@ -363,23 +425,8 @@ function ClientForm() {
                     </Col>
                   </Row>
                   <Row>
-                    <Col className="pr-1" md="4">
-                      <Form.Group>
-                        <label>Fax</label>
-                        <Form.Control
-                          required
-                          placeholder="Fax"
-                          type="text"
-                          value={FaxNumber}
-                          name="FaxNumber"
-                          onChange={(e) => handleInputChange(e)}
-                        ></Form.Control>
-                        <Form.Control.Feedback type="invalid">
-                          Please provide a value.
-                        </Form.Control.Feedback>
-                      </Form.Group>
-                    </Col>
-                    <Col className="px-1" md="4">
+
+                    <Col className="pr-1" md="6">
                       <Form.Group>
                         <label>Email</label>
                         <Form.Control
@@ -395,7 +442,7 @@ function ClientForm() {
                         </Form.Control.Feedback>
                       </Form.Group>
                     </Col>
-                    <Col className="pl-1" md="4">
+                    <Col className="pl-1" md="6">
                       <Form.Group>
                         <label>Kredito Maksimo</label>
                         <Form.Control
@@ -461,7 +508,7 @@ function ClientForm() {
 
                     </Col>
                   </Row>
-                  <Row>
+                  {typeOfClient == 0 && <Row>
                     <Col className="pr-1" md="12">
                       <Form.Group>
                         <label>Rebendedo</label>
@@ -477,8 +524,13 @@ function ClientForm() {
                           }}
                         >
                           {dealers.map((item, index) => {
+                            if (index == 0) {
+                              return (
+                                <option value={item.id}> Dealers : {item.Code}</option>
+                              )
+                            }
                             return (
-                              <option value={item.id}> Code : {item.Code}</option>
+                              <option value={item.id}> {item.Code}</option>
                             )
                           })}
                         </Form.Control>
@@ -487,7 +539,7 @@ function ClientForm() {
                         </Form.Control.Feedback>
                       </Form.Group>
                     </Col>
-                  </Row>
+                  </Row>}
                   <Row>
                     <Col md="12">
                       <Form.Group>
@@ -547,7 +599,7 @@ function ClientForm() {
             </Card>
           </Col>
         </Row>
-      </Container>
+      </Container>}
     </>
   );
 }

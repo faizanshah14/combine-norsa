@@ -254,7 +254,7 @@ function ClientList() {
                           <td> {item.FirstName} </td>
                           <td> {item.LastName} </td>
                           <td> {item.Email} </td>
-                          <td> {item.WorkNo} </td>
+                          <td> {item.ContactNo} </td>
                           <td> {item.WorksAt} </td>
                           <td> {item.FaxNumber} </td>
                           <td> {item.MaxBorrowAmount} </td>
