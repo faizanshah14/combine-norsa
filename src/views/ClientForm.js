@@ -208,24 +208,24 @@ function ClientForm() {
               </Card.Header>
               <Card.Body>
                 <Form onSubmit={handleSubmit}>
-//                   <Row>
-//                     <Col md="12">
-//                       <Form.Group>
-//                         <label>Date</label>
-//                         <Form.Control
-//                           required
-//                           placeholder="123"
-//                           type="date"
-//                           value={Date}
-//                           name="Date"
-//                           onChange={(e) => handleInputChange(e)}
-//                         ></Form.Control>
-//                         <Form.Control.Feedback type="invalid">
-//                           Please provide a value.
-//                         </Form.Control.Feedback>
-//                       </Form.Group>
-//                     </Col>
-//                   </Row>
+                  { /* <Row>
+                  <Col md="12">
+                    <Form.Group>
+                      <label>Date</label>
+                      <Form.Control
+                        required
+                        placeholder="123"
+                        type="date"
+                        value={Date}
+                        name="Date"
+                        onChange={(e) => handleInputChange(e)}
+                      ></Form.Control>
+                      <Form.Control.Feedback type="invalid">
+                        Please provide a value.
+                      </Form.Control.Feedback>
+                    </Form.Group>
+                  </Col>
+                </Row> */}
                   <Row>
                     <Col className="pr-1" md="2">
                       <Form.Group>
