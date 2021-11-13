@@ -21,7 +21,7 @@ import { getMerchantData } from "services/merchant";
 import { getNfcList } from "services/nfc";
 import addIssuanceHistory from "services/issuanceHistory";
 import _uniqueId from 'lodash/uniqueId';
-import "../components/Dashboard.css"
+import { getActiveClientList } from "services/client";
 
 
 function IssuanceCardForm() {
@@ -71,7 +71,7 @@ function IssuanceCardForm() {
       .catch(function (error) {
         console.log(error);
       })
-    getClientList().
+    getActiveClientList().
       then(function (response) {
         console.log(response.data)
         response.data.unshift({})

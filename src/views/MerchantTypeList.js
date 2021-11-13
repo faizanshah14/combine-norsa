@@ -96,21 +96,21 @@ function MerchantTypeList() {
   }
 
   const deleteRow = (itemToDelete) => {
-    deleteMerchantTypeDiscount()
-      .then(function (response) {
-        deleteMerchantType(tableData[itemToDelete].id)
-          .then(function (response) {
-            console.log(response)
-          })
-          .catch(function (error) {
-            console.log(error)
-            console.log(error.message)
-          })
-      })
-      .catch(function (error) {
-        console.log(error)
-        console.log(error.message)
-      })
+    // deleteMerchantTypeDiscount()
+    //   .then(function (response) {
+    //     deleteMerchantType(tableData[itemToDelete].id)
+    //       .then(function (response) {
+    //         console.log(response)
+    //       })
+    //       .catch(function (error) {
+    //         console.log(error)
+    //         console.log(error.message)
+    //       })
+    //   })
+    //   .catch(function (error) {
+    //     console.log(error)
+    //     console.log(error.message)
+    //   })
 
     setTableData(tableData.filter((item, index) => index !== itemToDelete))
   }

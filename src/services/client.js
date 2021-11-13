@@ -13,6 +13,30 @@ export default function getClientList() {
     })
 }
 
+export function getActiveClientList() {
+    const token = getToken()
+    if (!token) return "Authentication Fail Sign In agian"
+    return axios.get(address + '/api/clients/getAllActiveClients', {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+        }
+    })
+}
+export function getNextId() {
+
+    return axios.get(address + '/api/public/clients/getNextK_Id')
+}
+
+export function getNextDId() {
+    const token = getToken()
+    return axios.get(address + '/api/clients/getNextD_Id', {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+        }
+    })
+}
 export function getClientData(id) {
     console.log(id)
     const token = getToken()
