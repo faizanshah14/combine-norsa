@@ -13,7 +13,7 @@ import {
   Row,
   Col,
 } from "react-bootstrap";
-import { useHistory } from 'react-router-dom';
+import { useHistory } from "react-router-dom";
 import { useEffect } from "react";
 import { getissuancehistoryByClientId } from "services/issuanceHistory";
 import { getMerchantData } from "services/merchant";
@@ -22,71 +22,68 @@ import { getNfcSingleData } from "services/nfc";
 import "../components/Dashboard.css";
 
 function IssuanceHistory() {
-  const [tableData, setTableData] = React.useState([{
-    DateTime: "",
-    Amount: "",
-    AmountPaid : "",
-    PaybackPeriod: "",
-    Client_id: "",
-    NfcCard_id: "",
-    Merchants_id: "",
-    id: "",
-    status: "",
-  }])
+  const [tableData, setTableData] = React.useState([
+    {
+      DateTime: "",
+      Amount: "",
+      AmountPaid: "",
+      PaybackPeriod: "",
+      Client_id: "",
+      NfcCard_id: "",
+      Merchants_id: "",
+      id: "",
+      status: "",
+    },
+  ]);
 
   const [ClientID, setClientID] = React.useState(null);
   const history = useHistory();
-  const [status, setStatus] = React.useState(false)
+  const [status, setStatus] = React.useState(false);
   const queryParams = new URLSearchParams(window.location.search);
-  const [clientName, setClientName] = React.useState(null)
-  const [merchantName, setMerchantName] = React.useState(null)
+  const [clientName, setClientName] = React.useState(null);
+  const [merchantName, setMerchantName] = React.useState(null);
 
   const params = queryParams.get("id");
 
   useEffect(() => {
-    if (!ClientID) return
-    
+    if (!ClientID) return;
 
     getissuancehistoryByClientId(ClientID)
       .then(function (response) {
-        console.log(response)
-        const temp = Promise.all(response.data.map(async (item, index) => {
-
-          const merchantData = await getMerchantData(item.Merchants_id)
-          item.Merchants_id = merchantData.data.Name
-          const nfcData = await getNfcSingleData(item.NfcCard_id)
-          item.NfcCard_id = nfcData.data.number
-          const clientData = await getClientData(ClientID)
-          item.Client_id = clientData.data.Code
-          return item
-        }))
-        temp.then(function(response){
-          setTableData(response)
-        })
+        console.log(response);
+        const temp = Promise.all(
+          response.data.map(async (item, index) => {
+            const merchantData = await getMerchantData(item.Merchants_id);
+            item.Merchants_id = merchantData.data.Name;
+            const nfcData = await getNfcSingleData(item.NfcCard_id);
+            item.NfcCard_id = nfcData.data.number;
+            const clientData = await getClientData(ClientID);
+            item.Client_id = clientData.data.Code;
+            return item;
+          })
+        );
+        temp.then(function (response) {
+          setTableData(response);
+        });
       })
       .catch(function (error) {
-        console.log(error)
-      })
-
-
-  }, [ClientID])
+        console.log(error);
+      });
+  }, [ClientID]);
   useEffect(() => {
     if (params != null) {
       setClientID(params);
     }
-
-  }, [])
-
-
+  }, []);
 
   const toggleStatus = (index) => {
-    let tempTable = [...tableData]
-    tempTable[index].Status = !tempTable[index].Status
-    setTableData(tempTable)
-  }
+    let tempTable = [...tableData];
+    tempTable[index].Status = !tempTable[index].Status;
+    setTableData(tempTable);
+  };
   const deleteRow = (itemToDelete) => {
-    setTableData(tableData.filter((item, index) => index !== itemToDelete))
-  }
+    setTableData(tableData.filter((item, index) => index !== itemToDelete));
+  };
   return (
     <>
       <Container fluid>
@@ -94,11 +91,14 @@ function IssuanceHistory() {
           <Col md="12">
             <Card className="card-plain table-plain-bg">
               <Card.Header>
-                <Card.Title as="h3">Issuance History</Card.Title>
+                <Card.Title as="h3" className="heading">
+                  Issuance History
+                </Card.Title>
               </Card.Header>
               <Card.Body className="table-full-width table-responsive px-0">
-                {/* <Button
-                  className="btn-fill ml-3 mr-3"
+                <div className="top-btn-wrapper">
+                  {/* <Button
+                  className="btn-fill "
                   type="submit"
                   style={{
                     backgroundColor: "#3AAB7B",
@@ -109,7 +109,7 @@ function IssuanceHistory() {
                   ADD
                 </Button>
                 <Button
-                  className="btn-fill mr-3"
+                  className="btn-fill "
                   type="submit"
                   variant="info"
                 >
@@ -122,10 +122,10 @@ function IssuanceHistory() {
                 >
                   Block
                 </Button> */}
+                </div>
                 <Table className="table-hover mt-3">
                   <thead>
                     <tr>
-
                       <th className="border-0">Fetcha</th>
                       <th className="border-0">Kliente</th>
                       <th className="border-0">Montante </th>
@@ -140,7 +140,6 @@ function IssuanceHistory() {
                     {tableData.map((item, index) => {
                       return (
                         <tr key={index}>
-
                           <td> {item.id} </td>
                           <td> {item.Client_id} </td>
                           <td> {item.Amount} </td>
@@ -148,7 +147,6 @@ function IssuanceHistory() {
                           <td> {item.PaybackPeriod} </td>
                           <td> {item.NfcCard_id} </td>
                           <td> {item.Merchants_id} </td>
-
 
                           {/* <td>
                             <i

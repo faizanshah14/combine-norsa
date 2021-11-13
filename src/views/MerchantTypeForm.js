@@ -176,7 +176,7 @@ function MerchantTypeForm() {
           <Col md="8">
             <Card className="form-wrapper mt-5">
               <Card.Header style={{ backgroundColor: "#F7F7F8" }}>
-                <Card.Title as="h4" className="text-center m-3">
+                <Card.Title as="h4" className="text-center m-3 heading">
                   Merchant Type
                 </Card.Title>
               </Card.Header>
@@ -248,14 +248,14 @@ function MerchantTypeForm() {
                     <Col>
                       <div className="button-wrapper">
                         <Button
-                          className="btn-fill"
+                          className="btn-fill res-size"
                           variant="info"
                           onClick={handleRow}
                         >
                           Add Row
                         </Button>
                         <Button
-                          className="btn-fill"
+                          className="btn-fill res-size"
                           type="submit"
                           style={{
                             backgroundColor: "#3AAB7B",
@@ -265,7 +265,10 @@ function MerchantTypeForm() {
                           Save
                         </Button>
                         <Link to="/admin/MerchantTypeList">
-                          <Button className="btn-fill" variant="danger">
+                          <Button
+                            className="btn-fill res-size"
+                            variant="danger"
+                          >
                             Back
                           </Button>
                         </Link>

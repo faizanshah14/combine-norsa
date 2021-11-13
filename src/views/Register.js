@@ -73,12 +73,14 @@ const Register = () => {
           <Col md="12">
             <Card className="card-plain table-plain-bg">
               <Card.Header>
-                <Card.Title as="h3">Usuarionan</Card.Title>
+                <Card.Title as="h3" className="heading">
+                  Usuarionan
+                </Card.Title>
               </Card.Header>
               <Card.Body className="table-full-width table-responsive px-0">
                 <div className="top-btn-wrapper">
                   <Button
-                    className="btn-fill pull-right"
+                    className="btn-fill res-size"
                     type="submit"
                     style={{
                       backgroundColor: "#3AAB7B",
@@ -89,7 +91,7 @@ const Register = () => {
                     ADD
                   </Button>
                   <Button
-                    className="btn-fill"
+                    className="btn-fill res-size"
                     type="submit"
                     variant="info"
                     onClick={() => {
@@ -107,7 +109,7 @@ const Register = () => {
                     Active
                   </Button>
                   <Button
-                    className="btn-fill "
+                    className="btn-fill res-size"
                     type="submit"
                     variant="danger"
                     onClick={() => {

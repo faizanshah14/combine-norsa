@@ -14,6 +14,7 @@ import {
 } from "react-bootstrap";
 import { useHistory, Link } from "react-router-dom";
 import { useEffect } from "react";
+import "../components/Dashboard.css"
 
 function PendingPaymentForm() {
   const history = useHistory();
@@ -91,14 +92,14 @@ function PendingPaymentForm() {
           <Col md="8">
             <Card className="form-wrapper mt-4">
               <Card.Header style={{ backgroundColor: "#F7F7F8" }}>
-                <Card.Title as="h4" className="text-center m-3">
+                <Card.Title as="h4" className="text-center m-3 heading">
                   Pending Payment
                 </Card.Title>
               </Card.Header>
               <Card.Body>
                 <Form onSubmit={handleSubmit}>
                   <Row>
-                    <Col className="pr-1" md="12">
+                    <Col md="12">
                       <Form.Group>
                         <label>Title</label>
                         <Form.Control
@@ -117,21 +118,23 @@ function PendingPaymentForm() {
                   </Row>
                   <Row className="text-center mt-2">
                     <Col md="12">
-                      <Button
-                        className="btn-fill mr-3"
-                        type="submit"
-                        style={{
-                          backgroundColor: "#3AAB7B",
-                          border: "2px solid #3AAB7B",
-                        }}
-                      >
-                        Save
-                      </Button>
-                      {/* <Link to="/admin/????">
-                        <Button className="btn-fill" variant="danger">
+                      <div className="button-wrapper">
+                        <Button
+                          className="btn-fill res-size"
+                          type="submit"
+                          style={{
+                            backgroundColor: "#3AAB7B",
+                            border: "2px solid #3AAB7B",
+                          }}
+                        >
+                          Save
+                        </Button>
+                        {/* <Link to="/admin/????">
+                        <Button className="btn-fill res-size" variant="danger">
                           Back
                         </Button>
                       </Link> */}
+                      </div>
                     </Col>
                   </Row>
                   <div className="clearfix"></div>

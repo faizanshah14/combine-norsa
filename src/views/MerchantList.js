@@ -138,11 +138,14 @@ function MerchantList() {
           <Col md="12">
             <Card className="card-plain table-plain-bg">
               <Card.Header>
-                <Card.Title as="h3">Merchants</Card.Title>
+                <Card.Title as="h3" className="heading">
+                  Merchants
+                </Card.Title>
               </Card.Header>
               <Card.Body className="table-full-width table-responsive px-1">
+                  <div className="top-btn-wrapper">
                 <Button
-                  className="btn-fill ml-3 mr-3"
+                  className="btn-fill res-size"
                   type="submit"
                   style={{
                     backgroundColor: "#3AAB7B",
@@ -152,15 +155,13 @@ function MerchantList() {
                 >
                   ADD
                 </Button>
-
-                <br />
+                </div>
                 <Col md="4">
                   <Form.Group>
                     <Form.Control
                       type="text"
                       className="mt-4"
                       placeholder="Search"
-
                       onChange={(e) => setToSearch(e.target.value)}
                     ></Form.Control>
                   </Form.Group>
@@ -205,7 +206,9 @@ function MerchantList() {
                               className="fa fa-edit"
                               style={{ color: "green" }}
                               onClick={() =>
-                                history.push("/admin/MerchantForm/?id=" + item.id)
+                                history.push(
+                                  "/admin/MerchantForm/?id=" + item.id
+                                )
                               }
                             />
                             &nbsp; &nbsp;

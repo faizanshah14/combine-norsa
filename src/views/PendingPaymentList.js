@@ -19,6 +19,7 @@ import { getissuancehistoryByClientId } from "services/issuanceHistory";
 import { getMerchantData } from "services/merchant";
 import { getClientData } from "services/client";
 import { getNfcSingleData } from "services/nfc";
+import "../components/Dashboard.css";
 
 function PendingPaymentList() {
   const [tableData, setTableData] = React.useState([{
@@ -96,8 +97,9 @@ function PendingPaymentList() {
                 <Card.Title as="h3">Pending Payments</Card.Title>
               </Card.Header>
               <Card.Body className="table-full-width table-responsive px-0">
+                   <div className="top-btn-wrapper">
                 {/* <Button
-                  className="btn-fill ml-3 mr-3"
+                  className="btn-fill"
                   type="submit"
                   style={{
                     backgroundColor: "#3AAB7B",
@@ -108,7 +110,7 @@ function PendingPaymentList() {
                   ADD
                 </Button>
                 <Button
-                  className="btn-fill mr-3"
+                  className="btn-fill "
                   type="submit"
                   variant="info"
                 >
@@ -121,6 +123,7 @@ function PendingPaymentList() {
                 >
                   Block
                 </Button> */}
+                  </div>
                 <Table className="table-hover mt-3">
                   <thead>
                     <tr>

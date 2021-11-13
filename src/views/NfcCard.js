@@ -90,71 +90,73 @@ function NfcCard() {
           <Col md="12">
             <Card className="card-plain table-plain-bg">
               <Card.Header>
-                <Card.Title as="h3">NFC Card</Card.Title>
+                <Card.Title as="h3" className="heading">
+                  NFC Card
+                </Card.Title>
               </Card.Header>
               <Card.Body className="table-full-width table-responsive px-0">
-                  <div className="top-btn-wrapper">
-                <Button
-                  className="btn-fill"
-                  type="submit"
-                  style={{
-                    backgroundColor: "#3AAB7B",
-                    border: "1px solid #3AAB7B",
-                  }}
-                  onClick={() => history.push("/admin/addnfccard")}
-                >
-                  ADD
-                </Button>
-                <Button
-                  className="btn-fill"
-                  type="submit"
-                  variant="info"
-                  onClick={() => {
-                    setTableData(
-                      tableData.map((item) => {
-                        if (item.Checked === true) {
-                          item.status = true;
-                          updateNfc(item)
-                            .then(function (response) {
-                              console.log(response);
-                            })
-                            .catch(function (error) {
-                              console.log(error);
-                            });
-                          item.Checked = false;
-                        }
-                        return item;
-                      })
-                    );
-                  }}
-                >
-                  Active
-                </Button>
-                <Button
-                  className="btn-fill"
-                  type="submit"
-                  variant="danger"
-                  onClick={() => {
-                    setTableData(
-                      tableData.map((item) => {
-                        if (item.Checked === true) {
-                          item.status = false;
-                          updateNfc(item)
-                            .then(function (response) {
-                              console.log(response);
-                            })
-                            .catch(function (error) {
-                              console.log(error);
-                            });
-                          item.Checked = false;
-                        }
-                        return item;
-                      })
-                    );
-                  }}
-                >
-                  Block
-                </Button>
+                <div className="top-btn-wrapper">
+                  <Button
+                    className="btn-fill res-size"
+                    type="submit"
+                    style={{
+                      backgroundColor: "#3AAB7B",
+                      border: "1px solid #3AAB7B",
+                    }}
+                    onClick={() => history.push("/admin/addnfccard")}
+                  >
+                    ADD
+                  </Button>
+                  <Button
+                    className="btn-fill res-size"
+                    type="submit"
+                    variant="info"
+                    onClick={() => {
+                      setTableData(
+                        tableData.map((item) => {
+                          if (item.Checked === true) {
+                            item.status = true;
+                            updateNfc(item)
+                              .then(function (response) {
+                                console.log(response);
+                              })
+                              .catch(function (error) {
+                                console.log(error);
+                              });
+                            item.Checked = false;
+                          }
+                          return item;
+                        })
+                      );
+                    }}
+                  >
+                    Active
+                  </Button>
+                  <Button
+                    className="btn-fill res-size"
+                    type="submit"
+                    variant="danger"
+                    onClick={() => {
+                      setTableData(
+                        tableData.map((item) => {
+                          if (item.Checked === true) {
+                            item.status = false;
+                            updateNfc(item)
+                              .then(function (response) {
+                                console.log(response);
+                              })
+                              .catch(function (error) {
+                                console.log(error);
+                              });
+                            item.Checked = false;
+                          }
+                          return item;
+                        })
+                      );
+                    }}
+                  >
+                    Block
+                  </Button>
                 </div>
                 <Col md="4">
                   <Form.Group>

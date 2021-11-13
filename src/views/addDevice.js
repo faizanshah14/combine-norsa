@@ -111,7 +111,7 @@ function addDevice() {
           <Col md="8">
             <Card className="form-wrapper mt-4">
               <Card.Header style={{ backgroundColor: "#F7F7F8" }}>
-                <Card.Title as="h3" className="text-center m-3">
+                <Card.Title as="h3" className="text-center m-3 heading">
                   Device
                 </Card.Title>
               </Card.Header>
@@ -155,40 +155,43 @@ function addDevice() {
                   </Row>
                   <Row>
                     <Col md="12">
-                        <div className="radio-wrapper">
-                      <label className="mt-1">Status</label>
-                      <Form.Check
-                        inline
-                        label="Active"
-                        name="group1"
-                        type="Radio"
-                        name="status"
-                        checked={status}
-                        onClick={(e) => {
-                          handleInputChange(e);
-                        }}
+                      <div className="radio-wrapper">
+                        <label className="mt-1">Status</label>
+                        <Form.Check
+                          inline
+                          label="Active"
+                          name="group1"
+                          type="Radio"
+                          name="status"
+                          checked={status}
+                          onClick={(e) => {
+                            handleInputChange(e);
+                          }}
                         />
-                        </div>
+                      </div>
                     </Col>
                   </Row>
                   <Row className="text-center">
                     <Col md="12">
                       <div className="button-wrapper">
-                      <Button
-                        className="btn-fill"
-                        type="submit"
-                        style={{
-                          backgroundColor: "#3AAB7B",
-                          border: "2px solid #3AAB7B",
-                        }}
-                      >
-                        Save
-                      </Button>
-                      <Link to="/admin/device">
-                        <Button className="btn-fill" variant="danger">
-                          Back
+                        <Button
+                          className="btn-fill res-size"
+                          type="submit"
+                          style={{
+                            backgroundColor: "#3AAB7B",
+                            border: "2px solid #3AAB7B",
+                          }}
+                        >
+                          Save
                         </Button>
-                      </Link>
+                        <Link to="/admin/device">
+                          <Button
+                            className="btn-fill res-size"
+                            variant="danger"
+                          >
+                            Back
+                          </Button>
+                        </Link>
                       </div>
                     </Col>
                   </Row>

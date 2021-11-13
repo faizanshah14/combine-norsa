@@ -121,7 +121,7 @@ function addNfcCard() {
           <Col sm="12" md="8">
             <Card className="form-wrapper mt-4">
               <Card.Header style={{ backgroundColor: "#F7F7F8" }}>
-                <Card.Title as="h3" className="text-center m-3">
+                <Card.Title as="h3" className="text-center m-3 heading">
                   NFC Card
                 </Card.Title>
               </Card.Header>
@@ -167,7 +167,7 @@ function addNfcCard() {
                     <Col md="12">
                       <div className="button-wrapper">
                         <Button
-                          className="btn-fill "
+                          className="btn-fill res-size"
                           type="submit"
                           style={{
                             backgroundColor: "#3AAB7B",
@@ -177,7 +177,10 @@ function addNfcCard() {
                           Save
                         </Button>
                         <Link to="/admin/nfccard">
-                          <Button className="btn-fill" variant="danger">
+                          <Button
+                            className="btn-fill res-size"
+                            variant="danger"
+                          >
                             Back
                           </Button>
                         </Link>
