@@ -16,6 +16,7 @@ import checkUser from "services/auth";
 import getNfcData from "services/nfc";
 import { deleteNfc } from "services/nfc";
 import { updateNfc } from "services/nfc";
+import "../components/Dashboard.css";
 
 function NfcCard() {
   const [tableData, setTableData] = React.useState([
@@ -92,8 +93,9 @@ function NfcCard() {
                 <Card.Title as="h3">NFC Card</Card.Title>
               </Card.Header>
               <Card.Body className="table-full-width table-responsive px-0">
+                  <div className="top-btn-wrapper">
                 <Button
-                  className="btn-fill ml-3 mr-3"
+                  className="btn-fill"
                   type="submit"
                   style={{
                     backgroundColor: "#3AAB7B",
@@ -104,7 +106,7 @@ function NfcCard() {
                   ADD
                 </Button>
                 <Button
-                  className="btn-fill  mr-3"
+                  className="btn-fill"
                   type="submit"
                   variant="info"
                   onClick={() => {
@@ -153,7 +155,7 @@ function NfcCard() {
                 >
                   Block
                 </Button>
-                <br />
+                </div>
                 <Col md="4">
                   <Form.Group>
                     <Form.Control
@@ -164,7 +166,7 @@ function NfcCard() {
                     ></Form.Control>
                   </Form.Group>
                 </Col>
-                <Table className="table-hover">
+                <Table className="table-hover" responsive>
                   <thead>
                     <tr>
                       <th className="border-0"> st </th>

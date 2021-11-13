@@ -16,6 +16,7 @@ import checkUser from "services/auth";
 import getDeviceData from "services/device";
 import { deleteDevice } from "services/device";
 import { updateDevice } from "services/device";
+import "../components/Dashboard.css"
 
 function Device() {
   const [tableData, setTableData] = React.useState([
@@ -95,8 +96,9 @@ function Device() {
                 <Card.Title as="h3">Device</Card.Title>
               </Card.Header>
               <Card.Body className="table-full-width table-responsive px-0">
+                <div className="top-btn-wrapper">
                 <Button
-                  className="btn-fill ml-3 mr-3"
+                  className="btn-fill"
                   type="submit"
                   style={{
                     backgroundColor: "#3AAB7B",
@@ -107,7 +109,7 @@ function Device() {
                   ADD
                 </Button>
                 <Button
-                  className="btn-fill  mr-3"
+                  className="btn-fill"
                   type="submit"
                   variant="info"
                   onClick={() => {
@@ -155,8 +157,8 @@ function Device() {
                   }}
                 >
                   Block
-                </Button>
-                <br />
+                  </Button>
+                  </div>
                 <Col md="4">
                   <Form.Group>
                     <Form.Control
@@ -167,7 +169,7 @@ function Device() {
                     ></Form.Control>
                   </Form.Group>
                 </Col>
-                <Table className="table-hover">
+                <Table className="table-hover" responsive>
                   <thead>
                     <tr>
                       <th className="border-0"> st </th>

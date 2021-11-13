@@ -20,6 +20,7 @@ import { getMerchantData } from "services/merchant";
 import { updateMerchant } from "services/merchant";
 import { addMerchant } from "services/merchant";
 import _uniqueId from 'lodash/uniqueId';
+import "../components/Dashboard.css";
 
 
 function MerchantForm() {
@@ -135,7 +136,7 @@ function MerchantForm() {
               <Card.Body>
                 <Form onSubmit={handleSubmit}>
                   <Row>
-                    <Col className="pr-1" md="6">
+                    <Col sm="12" md="6">
                       <Form.Group>
                         <label>Code</label>
                         <Form.Control
@@ -151,7 +152,7 @@ function MerchantForm() {
                         </Form.Control.Feedback>
                       </Form.Group>
                     </Col>
-                    <Col className="px-1" md="6">
+                    <Col sm="12" md="6">
                       <Form.Group>
                         <label>Nomber</label>
                         <Form.Control
@@ -169,7 +170,7 @@ function MerchantForm() {
                     </Col>
                   </Row>
                   <Row>
-                    <Col className="pr-1" md="6">
+                    <Col sm="12" md="6">
                       <Form.Group>
                         <label>Account Nomber</label>
                         <Form.Control
@@ -185,7 +186,7 @@ function MerchantForm() {
                         </Form.Control.Feedback>
                       </Form.Group>
                     </Col>
-                    <Col className="pr-1" md="6">
+                    <Col sm="12" md="6">
                       <Form.Group>
                         <label>Banko</label>
                         <Form.Control
@@ -204,23 +205,22 @@ function MerchantForm() {
                   </Row>
 
                   <Row>
-                    <Col className="pr-1" md="12">
+                    <Col sm="12" md="12">
                       <Form.Group>
                         <label>Merchant Type</label>
-                       
+
                         <Form.Control
                           as="select"
                           value={MerchantType_id}
                           name="MerchantType_id"
-                          onChange={e => {
-                           
-                            handleInputChange(e)
+                          onChange={(e) => {
+                            handleInputChange(e);
                           }}
                         >
                           {merchantTypes.map((item) => {
                             return (
                               <option value={item.id}>{item.Title}</option>
-                            )
+                            );
                           })}
                         </Form.Control>
                         <Form.Control.Feedback type="invalid">
@@ -229,23 +229,25 @@ function MerchantForm() {
                       </Form.Group>
                     </Col>
                   </Row>
-                  <Row className="text-center mt-2">
+                  <Row className="text-center">
                     <Col md="12">
-                      <Button
-                        className="btn-fill mr-3"
-                        type="submit"
-                        style={{
-                          backgroundColor: "#3AAB7B",
-                          border: "2px solid #3AAB7B",
-                        }}
-                      >
-                        Save
-                      </Button>
-                      <Link to="/admin/MerchantList">
-                        <Button className="btn-fill" variant="danger">
-                          Back
+                      <div className="button-wrapper">
+                        <Button
+                          className="btn-fill"
+                          type="submit"
+                          style={{
+                            backgroundColor: "#3AAB7B",
+                            border: "2px solid #3AAB7B",
+                          }}
+                        >
+                          Save
                         </Button>
-                      </Link>
+                        <Link to="/admin/MerchantList">
+                          <Button className="btn-fill" variant="danger">
+                            Back
+                          </Button>
+                        </Link>
+                      </div>
                     </Col>
                   </Row>
                   <div className="clearfix"></div>

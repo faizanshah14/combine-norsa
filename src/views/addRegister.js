@@ -1,6 +1,6 @@
-import React, { useState , useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
-import { Button, Form } from "react-bootstrap";
+import { Button, Card, Form, Container, Row, Col } from "react-bootstrap";
 import _uniqueId from "lodash/uniqueId";
 import addRegisterr from "services/register";
 import "../components/Dashboard.css";
@@ -44,108 +44,85 @@ const addRegister = () => {
   };
 
   return (
-    <div>
-      <div className="row justify-content-center">
-        <div className="col-6 form-wrapper mt-5">
-          <form onSubmit={onSubmitHandler}>
-            <h3 className="text-center m-5">Usuarionan</h3>
-            <div className="form-row">
-              {/* <div className="form-group col-md-12">
-                <label for="firstName">First Name</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="firstname"
-                  placeholder="Fiste Name"
-                  name="firstName"
-                  value={inputnfcData.firstName}
-                  onChange={onChnageHandler}
-                  pattern="[a-zA-Z. ]+"
-                  required
-                />
-              </div> */}
-              {/* <div className="form-group col-md-12">
-                <label for="lastName">Last Name</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="lastName"
-                  placeholder="Last Name"
-                  name="lastName"
-                  value={inputnfcData.lastName}
-                  onChange={onChnageHandler}
-                  pattern="[a-zA-Z. ]+"
-                  required
-                />
-              </div> */}
-            </div>
-            <div className="form-group">
-              <label for="email">Email</label>
-              <input
-                type="email"
-                className="form-control"
-                id="email"
-                placeholder="Email"
-                name="email"
-                value={inputregisterData.email}
-                onChange={onChnageHandler}
-                pattern="[a-zA-Z0-9_.-]{3,}@[A-Za-z]{3,}[.]{1}[A-Za-z]{1,}"
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label for="password">Password</label>
-              <input
-                type="password"
-                className="form-control"
-                id="password"
-                placeholder="Password"
-                name="password"
-                value={inputregisterData.password}
-                onChange={onChnageHandler}
-                // pattern="(?=.*[0-9])[A-Za-z0-9!@#$%^&*]{6,15}"
-                required
-              />
-            </div>
+    <Container>
+      <Row className="justify-content-center">
+        <Col sm="12" md="8">
+          <Card className="form-wrapper mt-4">
+            <Card.Header style={{ backgroundColor: "#F7F7F8" }}>
+              <Card.Title as="h3" className="text-center m-3">
+                Usuarionan
+              </Card.Title>
+            </Card.Header>
+            <Card.Body>
+              <Form onSubmit={onSubmitHandler}>
+                <Row>
+                  <Col sm="12" md="12">
+                    <Form.Group>
+                      <label>Email</label>
+                      <Form.Control
+                        type="email"
+                        placeholder="Email"
+                        name="email"
+                        value={inputregisterData.email}
+                        onChange={onChnageHandler}
+                        pattern="[a-zA-Z0-9_.-]{3,}@[A-Za-z]{3,}[.]{1}[A-Za-z]{1,}"
+                        required
+                      ></Form.Control>
+                      <Form.Control.Feedback type="invalid">
+                        Please provide a value.
+                      </Form.Control.Feedback>
+                    </Form.Group>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col sm="12" md="12">
+                    <Form.Group>
+                      <label>Password</label>
+                      <Form.Control
+                        type="password"
+                        placeholder="Password"
+                        name="password"
+                        value={inputregisterData.password}
+                        onChange={onChnageHandler}
+                        // pattern="(?=.*[0-9])[A-Za-z0-9!@#$%^&*]{6,15}"
+                        required
+                      ></Form.Control>
+                      <Form.Control.Feedback type="invalid">
+                        Please provide a value.
+                      </Form.Control.Feedback>
+                    </Form.Group>
+                  </Col>
+                </Row>
 
-            <div className="mt-5 text-center">
-              <Button
-                className="btn-fill mr-3"
-                style={{
-                  backgroundColor: "#3AAB7B",
-                  border: "1px solid #3AAB7B",
-                }}
-                type="submit"
-              >
-                Save
-              </Button>
-              <Link to="/admin/register">
-                <Button className="btn-fill" variant="danger">
-                  Back
-                </Button>
-              </Link>
-            </div>
-          </form>
-          <div>
-            {/* {inputnfcData.cardid} , {inputnfcData.number}, {inputnfcData.status}
-            <br />
-            submited data=
-            {submitdata?.map((data) => {
-              return (
-                <div>
-                  id:
-                  {data.cardid}
-                  number:
-                  {data.number}
-                  status:
-                  {data.status}
-                </div>
-              );
-            })} */}
-          </div>
-        </div>
-      </div>
-    </div>
+                <Row className="text-center mt-3">
+                  <Col md="12">
+                    <div className="button-wrapper">
+                      <Button
+                        className="btn-fill "
+                        type="submit"
+                        style={{
+                          backgroundColor: "#3AAB7B",
+                          border: "2px solid #3AAB7B",
+                        }}
+                      >
+                        Save
+                      </Button>
+                      <Link to="/admin/register">
+                        <Button className="btn-fill" variant="danger">
+                          Back
+                        </Button>
+                      </Link>
+                    </div>
+                  </Col>
+                </Row>
+
+                <div className="clearfix"></div>
+              </Form>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+    </Container>
   );
 };
 

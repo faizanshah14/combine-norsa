@@ -19,6 +19,7 @@ import { getissuancehistoryByClientId } from "services/issuanceHistory";
 import { getMerchantData } from "services/merchant";
 import { getClientData } from "services/client";
 import { getNfcSingleData } from "services/nfc";
+import "../components/Dashboard.css";
 
 function IssuanceHistory() {
   const [tableData, setTableData] = React.useState([{

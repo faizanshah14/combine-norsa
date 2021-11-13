@@ -185,7 +185,7 @@ function ClientForm() {
               <Card.Body>
                 <Form onSubmit={handleSubmit}>
                   <Row>
-                    <Col className="pr-1" md="2">
+                    <Col sm="12" md="2">
                       <Form.Group>
                         <label>Code</label>
                         <Form.Control
@@ -201,7 +201,7 @@ function ClientForm() {
                         </Form.Control.Feedback>
                       </Form.Group>
                     </Col>
-                    <Col className="px-1" md="5">
+                    <Col sm="12" md="5">
                       <Form.Group>
                         <label>Nomber</label>
                         <Form.Control
@@ -217,7 +217,7 @@ function ClientForm() {
                         </Form.Control.Feedback>
                       </Form.Group>
                     </Col>
-                    <Col className="pl-1" md="5">
+                    <Col sm="12" md="5">
                       <Form.Group>
                         <label htmlFor="exampleLastName">Fam</label>
                         <Form.Control
@@ -235,7 +235,7 @@ function ClientForm() {
                     </Col>
                   </Row>
                   <Row>
-                    <Col className="pr-1" md="6">
+                    <Col sm="12" md="6">
                       <Form.Group>
                         <label>Tel Trabou</label>
                         <Form.Control
@@ -251,7 +251,7 @@ function ClientForm() {
                         </Form.Control.Feedback>
                       </Form.Group>
                     </Col>
-                    <Col className="pl-1" md="6">
+                    <Col sm="12" md="6">
                       <Form.Group>
                         <label> Celullar</label>
                         <Form.Control
@@ -287,7 +287,7 @@ function ClientForm() {
                     </Col>
                   </Row>
                   <Row>
-                    <Col className="pr-1" md="4">
+                    <Col sm="12" md="4">
                       <Form.Group>
                         <label>Fax</label>
                         <Form.Control
@@ -303,7 +303,7 @@ function ClientForm() {
                         </Form.Control.Feedback>
                       </Form.Group>
                     </Col>
-                    <Col className="px-1" md="4">
+                    <Col sm="12" md="4">
                       <Form.Group>
                         <label>Email</label>
                         <Form.Control
@@ -319,7 +319,7 @@ function ClientForm() {
                         </Form.Control.Feedback>
                       </Form.Group>
                     </Col>
-                    <Col className="pl-1" md="4">
+                    <Col sm="12" md="4">
                       <Form.Group>
                         <label>Kredito Maksimo</label>
                         <Form.Control
@@ -337,7 +337,7 @@ function ClientForm() {
                     </Col>
                   </Row>
                   <Row>
-                    <Col className="pr-1" md="12">
+                    <Col sm="12" md="12">
                       <Form.Group>
                         <label>Rebendedo</label>
                         <Form.Control
@@ -345,16 +345,14 @@ function ClientForm() {
                           defaultValue=""
                           value={Dealer_id}
                           name="Dealer_id"
-                          onChange={e => {
-                            console.log(e)
+                          onChange={(e) => {
+                            console.log(e);
                             console.log("e.target.value", e.target.value);
-                            handleInputChange(e)
+                            handleInputChange(e);
                           }}
                         >
                           {dealers.map((item) => {
-                            return (
-                              <option value={item.id}>{item.Code}</option>
-                            )
+                            return <option value={item.id}>{item.Code}</option>;
                           })}
                         </Form.Control>
                         <Form.Control.Feedback type="invalid">
@@ -364,7 +362,7 @@ function ClientForm() {
                     </Col>
                   </Row>
                   <Row>
-                    <Col className="pr-1" md="12">
+                    <Col sm="12" md="12">
                       <Form.Check
                         inline
                         label="Active"
@@ -379,26 +377,27 @@ function ClientForm() {
                       />
                     </Col>
                   </Row>
-                  <Row className="text-center mt-2">
+                  <Row className="text-center">
                     <Col md="12">
-                      <Button
-                        className="btn-fill mr-3"
-                        type="submit"
-                        style={{
-                          backgroundColor: "#3AAB7B",
-                          border: "2px solid #3AAB7B",
-                        }}
-                      >
-                        Save
-                      </Button>
-                      <Link to="/admin/ClientList">
-                        <Button className="btn-fill" variant="danger">
-                          Back
+                      <div className="button-wrapper">
+                        <Button
+                          className="btn-fill "
+                          type="submit"
+                          style={{
+                            backgroundColor: "#3AAB7B",
+                            border: "2px solid #3AAB7B",
+                          }}
+                        >
+                          Save
                         </Button>
-                      </Link>
+                        <Link to="/admin/ClientList">
+                          <Button className="btn-fill" variant="danger">
+                            Back
+                          </Button>
+                        </Link>
+                      </div>
                     </Col>
                   </Row>
-
                   <div className="clearfix"></div>
                 </Form>
               </Card.Body>

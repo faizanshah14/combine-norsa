@@ -17,6 +17,7 @@ import { useHistory } from "react-router-dom";
 import { useEffect } from "react";
 import getMerchantList from "services/merchant";
 import { deleteMerchant } from "services/merchant";
+import "../components/Dashboard.css";
 
 function MerchantList() {
   const [tableData, setTableData] = React.useState([
@@ -164,7 +165,7 @@ function MerchantList() {
                     ></Form.Control>
                   </Form.Group>
                 </Col>
-                <Table className="table-hover">
+                <Table className="table-hover" responsive>
                   <thead>
                     <tr>
                       <th className="border-0"> st </th>

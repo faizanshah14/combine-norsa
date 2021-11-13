@@ -13,6 +13,7 @@ import {
   Row,
   Col,
 } from "react-bootstrap";
+import "../components/Dashboard.css";
 
 const Register = () => {
   const [registerData, setRegisterData] = useState([]);
@@ -75,64 +76,66 @@ const Register = () => {
                 <Card.Title as="h3">Usuarionan</Card.Title>
               </Card.Header>
               <Card.Body className="table-full-width table-responsive px-0">
-                <Button
-                  className="btn-fill pull-right ml-3 mr-3 mb-4"
-                  type="submit"
-                  style={{
-                    backgroundColor: "#3AAB7B",
-                    border: "1px solid #3AAB7B",
-                  }}
-                  onClick={() => history.push("/admin/addregister")}
-                >
-                  ADD
-                </Button>
-                <Button
-                  className="btn-fill mr-3 mb-4 "
-                  type="submit"
-                  variant="info"
-                  onClick={() => {
-                    setRegisterData(
-                      registerData.map((item) => {
-                        if (item.Checked === true) {
-                          item.Status = true;
-                          item.Checked = false;
-                        }
-                        return item;
-                      })
-                    );
-                  }}
-                >
-                  Active
-                </Button>
-                <Button
-                  className="btn-fill mb-4"
-                  type="submit"
-                  variant="danger"
-                  onClick={() => {
-                    setRegisterData(
-                      registerData.map((item) => {
-                        if (item.Checked === true) {
-                          item.Status = false;
-                          item.Checked = false;
-                        }
-                        return item;
-                      })
-                    );
-                  }}
-                >
-                  Block
-                </Button>
-                <br />
+                <div className="top-btn-wrapper">
+                  <Button
+                    className="btn-fill pull-right"
+                    type="submit"
+                    style={{
+                      backgroundColor: "#3AAB7B",
+                      border: "1px solid #3AAB7B",
+                    }}
+                    onClick={() => history.push("/admin/addregister")}
+                  >
+                    ADD
+                  </Button>
+                  <Button
+                    className="btn-fill"
+                    type="submit"
+                    variant="info"
+                    onClick={() => {
+                      setRegisterData(
+                        registerData.map((item) => {
+                          if (item.Checked === true) {
+                            item.Status = true;
+                            item.Checked = false;
+                          }
+                          return item;
+                        })
+                      );
+                    }}
+                  >
+                    Active
+                  </Button>
+                  <Button
+                    className="btn-fill "
+                    type="submit"
+                    variant="danger"
+                    onClick={() => {
+                      setRegisterData(
+                        registerData.map((item) => {
+                          if (item.Checked === true) {
+                            item.Status = false;
+                            item.Checked = false;
+                          }
+                          return item;
+                        })
+                      );
+                    }}
+                  >
+                    Block
+                  </Button>
+                </div>
                 <Col md="4">
                   <Form.Group>
                     <Form.Control
                       type="text"
+                      className="mt-4"
                       placeholder="Search"
                       onChange={onChangeHandler}
                     ></Form.Control>
                   </Form.Group>
                 </Col>
-                <Table className="table-hover">
+                <Table className="table-hover" responsive>
                   <thead>
                     <tr>
                       <th className="border-0 "> st </th>
