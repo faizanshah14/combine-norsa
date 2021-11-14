@@ -33,6 +33,7 @@ function ClientForm() {
   const [uniqueID] = React.useState(_uniqueId("prefix-"))
   const [dealers, setDealers] = React.useState([])
   const [typeOfClient, setTypeOfClient] = React.useState()
+  const [file, setFile] = React.useState()
   const [formData, setFormData] = React.useState({
     id: "",
     Date: "2021-01-01",
@@ -52,12 +53,6 @@ function ClientForm() {
     SourceOfIncome: "",
     RecievedCreditInPast: false
   });
-
-  const [fileForm, setFileForm] = React.useState({
-    id: _uniqueId("prefix-"),
-    filePath: "",
-    Client_id: ""
-  })
   useEffect(() => {
     const params = queryParams.get("id");
     if (params != null) {
@@ -152,6 +147,14 @@ function ClientForm() {
     return true;
   };
 
+  const handleFileSubmit = () => {
+    console.log(file)
+    const data = new FormData();
+    data.append("file", file);
+    data.append("id", uniqueID);
+    data.append('Client_id', formData.id);
+    return addClientImage(data)
+  }
   const handleInputChange = (e) => {
 
     if (e.target.name == "Status") {
@@ -206,6 +209,12 @@ function ClientForm() {
       addClient(formData)
         .then(function (response) {
           console.log(response)
+          handleFileSubmit()
+            .then(function (response) {
+              alert("submitted")
+            }).catch(function (error) {
+              console.log(error)
+            })
         })
         .catch(function (error) {
           console.log(error)
@@ -215,6 +224,11 @@ function ClientForm() {
     history.push("/admin/ClientList");
 
   };
+  const handleFileChange = (event) => {
+    if (event.target.files.length !== 0) {
+      setFile(event.target.files[0])
+    }
+  }
 
   return (
     <>
@@ -548,6 +562,7 @@ function ClientForm() {
 
                           type="file"
                           name="profilePicture"
+                          onChange={(e) => { handleFileChange(e) }}
                         //onChange={(e) => handleInputChange(e)}
                         ></Form.Control>
                         <Form.Control.Feedback type="invalid">
@@ -556,6 +571,12 @@ function ClientForm() {
                       </Form.Group>
                     </Col>
                   </Row>
+                  
+                  {file && <Row>
+                    <Col md="12">
+                      <img src={URL.createObjectURL(file)} />
+                    </Col>
+                  </Row>}
 
                   {/* <Row>
                     <Col className="pr-1" md="12">

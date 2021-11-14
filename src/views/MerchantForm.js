@@ -43,6 +43,7 @@ function MerchantForm() {
     getMerchantTypeList().
       then(function (response) {
         console.log(response.data)
+        response.data.unshift({})
         setMerchantTypes(response.data)
       })
       .catch(function (error) {

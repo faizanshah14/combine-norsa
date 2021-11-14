@@ -37,6 +37,7 @@ function MerchantTypeForm() {
 
   });
   const [discountFormData, setDiscountFormData] = React.useState([])
+  
   useEffect(() => {
     const params = queryParams.get("id");
     if (params != null) {
@@ -128,6 +129,7 @@ function MerchantTypeForm() {
     if (ClientID) {
       updateMerchantType(formData)
         .then(function (response) {
+          console.log(discountFormData)
           discountFormData.map((item) => {
             updateMerchantTypeDiscount(item)
               .then(function (response) {
@@ -137,7 +139,6 @@ function MerchantTypeForm() {
                 console.log(error)
               })
           })
-
         })
         .catch(function (error) {
           console.log(error)
@@ -165,7 +166,7 @@ function MerchantTypeForm() {
     history.push("/admin/MerchantTypeList");
   };
   const handleRow = () => {
-    setDiscountFormData([...discountFormData, { id: uniqueID, NumberOfMonths: 0, Interest: 0, MerchantType_id: formData.id }])
+    setDiscountFormData([...discountFormData, { id: _uniqueId("prefix-"), NumberOfMonths: 0, Interest: 0, MerchantType_id: formData.id }])
   };
 
   return (
