@@ -571,10 +571,9 @@ function ClientForm() {
                       </Form.Group>
                     </Col>
                   </Row>
-                  
                   {file && <Row>
                     <Col md="12">
-                      <img src={URL.createObjectURL(file)} />
+                      <img src={URL.createObjectURL(file)}/>
                     </Col>
                   </Row>}
 

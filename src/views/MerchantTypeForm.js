@@ -23,6 +23,7 @@ import _uniqueId from 'lodash/uniqueId';
 import { addMerchantType } from "services/merchantType";
 import { getMerchantData } from "services/merchant";
 import { addMerchantTypeDiscount } from "services/merchantType";
+import "../components/Dashboard.css";
 
 function MerchantTypeForm() {
   const history = useHistory();
@@ -176,14 +177,14 @@ function MerchantTypeForm() {
           <Col md="8">
             <Card className="form-wrapper mt-5">
               <Card.Header style={{ backgroundColor: "#F7F7F8" }}>
-                <Card.Title as="h4" className="text-center m-3">
+                <Card.Title as="h4" className="text-center m-3 heading">
                   Merchant Type
                 </Card.Title>
               </Card.Header>
               <Card.Body>
                 <Form onSubmit={handleSubmit}>
                   <Row>
-                    <Col className="pr-1" md="12">
+                    <Col sm="12" md="12">
                       <Form.Group>
                         <label>Title</label>
                         <Form.Control
@@ -203,7 +204,7 @@ function MerchantTypeForm() {
                   {discountFormData.map((item, index) => {
                     return (
                       <Row>
-                        <Col className="pr-1" md="6">
+                        <Col sm="12" md="6">
                           <Form.Group>
                             <label>Number Of Months</label>
                             <Form.Control
@@ -222,7 +223,7 @@ function MerchantTypeForm() {
                             </Form.Control.Feedback>
                           </Form.Group>
                         </Col>
-                        <Col className="pr-1" md="6">
+                        <Col sm="12" md="6">
                           <Form.Group>
                             <label>Interest in %</label>
                             <Form.Control
@@ -246,28 +247,36 @@ function MerchantTypeForm() {
                   })}
                   <Row className="text-center  justify-content-center mt-4">
                     <Col>
-                      <Button
-                        className="btn-fill mr-3"
-                        variant="info"
-                        onClick={handleRow}
-                      >
-                        Add Row
-                      </Button>
-                      <Button
-                        className="btn-fill mr-3"
-                        type="submit"
-                        style={{
-                          backgroundColor: "#3AAB7B",
-                          border: "2px solid #3AAB7B",
-                        }}
-                      >
-                        Save
-                      </Button>
-                      <Link to="/admin/MerchantTypeList">
-                        <Button className="btn-fill" variant="danger">
-                          Back
+                      <div className="button-wrapper">
+                        <Button
+                          className="btn-fill res-size"
+                          variant="info"
+                          onClick={handleRow}
+                        >
+                          Add Row
                         </Button>
-                      </Link>
+                        <Button
+                          className="btn-fill res-size"
+                          type="submit"
+                          style={{
+                            backgroundColor: "#3AAB7B",
+                            border: "none",
+                          }}
+                        >
+                          Save
+                        </Button>
+                        <Link to="/admin/MerchantTypeList">
+                          <Button
+                            className="btn-fill res-size"
+                            variant="danger"
+                            style={{
+                              border: "none",
+                            }}
+                          >
+                            Back
+                          </Button>
+                        </Link>
+                      </div>
                     </Col>
                   </Row>
 

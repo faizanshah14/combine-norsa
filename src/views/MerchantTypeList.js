@@ -17,6 +17,7 @@ import { useHistory } from 'react-router-dom';
 import { useEffect } from "react";
 import getMerchantTypeList from "services/merchantType";
 import { deleteMerchantType } from "services/merchantType"
+import "../components/Dashboard.css";
 
 function MerchantTypeList() {
   const [tableData, setTableData] = React.useState([{
@@ -121,21 +122,22 @@ function MerchantTypeList() {
           <Col md="12">
             <Card className="card-plain table-plain-bg">
               <Card.Header>
-                <Card.Title as="h3">Merchant Type</Card.Title>
+                <Card.Title as="h3" className="heading">Merchant Type</Card.Title>
               </Card.Header>
               <Card.Body className="table-full-width table-responsive px-0">
+                  <div className="top-btn-wrapper">
                 <Button
-                  className="btn-fill ml-3 mr-3"
+                  className="btn-fill res-size"
                   type="submit"
                   style={{
                     backgroundColor: "#3AAB7B",
-                    border: "1px solid #3AAB7B",
+                    border: "none",
                   }}
                   onClick={() => history.push("/admin/MerchantTypeForm")}
                 >
                   ADD
-                </Button>
-                <br />
+                  </Button>
+                  </div>
                 <Col md="4">
                   <Form.Group>
                     <Form.Control
@@ -146,7 +148,7 @@ function MerchantTypeList() {
                     ></Form.Control>
                   </Form.Group>
                 </Col>
-                <Table className="table-hover">
+                <Table className="table-hover" responsive>
                   <thead>
                     <tr>
                       <th className="border-0"> st </th>

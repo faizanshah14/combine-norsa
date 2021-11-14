@@ -22,6 +22,7 @@ import { getNfcList } from "services/nfc";
 import addIssuanceHistory from "services/issuanceHistory";
 import _uniqueId from 'lodash/uniqueId';
 import { getActiveClientList } from "services/client";
+import "../components/Dashboard.css";
 
 
 function IssuanceCardForm() {
@@ -181,14 +182,14 @@ function IssuanceCardForm() {
           <Col md="8">
             <Card className="form-wrapper mt-4">
               <Card.Header style={{ backgroundColor: "#F7F7F8" }}>
-                <Card.Title as="h4" className="text-center m-3">
+                <Card.Title as="h4" className="text-center m-3 heading">
                   Card Issuance
                 </Card.Title>
               </Card.Header>
               <Card.Body>
                 <Form onSubmit={handleSubmit}>
                   <Row>
-                    <Col className="pr-1" md="6">
+                    <Col sm="12" md="6">
                       <Form.Group>
                         <label>Date</label>
                         <Form.Control
@@ -204,7 +205,7 @@ function IssuanceCardForm() {
                         </Form.Control.Feedback>
                       </Form.Group>
                     </Col>
-                    <Col md="6">
+                    <Col sm="12" md="6">
                       <Form.Group>
                         <label>Montante</label>
                         <Form.Control
@@ -223,21 +224,19 @@ function IssuanceCardForm() {
                     </Col>
                   </Row>
                   <Row>
-                    <Col className="pr-1" md="6">
+                    <Col sm="12" md="6">
                       <Form.Group>
                         <label htmlFor="exampleLastName">Client Code</label>
                         <Form.Control
                           as="select"
                           value={Client_id}
                           name="Client_id"
-                          onChange={e => {
-                            handleInputChange(e)
+                          onChange={(e) => {
+                            handleInputChange(e);
                           }}
                         >
                           {allClients.map((item) => {
-                            return (
-                              <option value={item.id}>{item.Code}</option>
-                            )
+                            return <option value={item.id}>{item.Code}</option>;
                           })}
                         </Form.Control>
                         <Form.Control.Feedback type="invalid">
@@ -245,21 +244,21 @@ function IssuanceCardForm() {
                         </Form.Control.Feedback>
                       </Form.Group>
                     </Col>
-                    <Col md="6">
+                    <Col sm="12" md="6">
                       <Form.Group>
                         <label>NFC Card ID</label>
                         <Form.Control
                           as="select"
                           value={NfcCard_id}
                           name="NfcCard_id"
-                          onChange={e => {
-                            handleInputChange(e)
+                          onChange={(e) => {
+                            handleInputChange(e);
                           }}
                         >
                           {allNfcCards.map((item) => {
                             return (
                               <option value={item.id}>{item.number}</option>
-                            )
+                            );
                           })}
                         </Form.Control>
                         <Form.Control.Feedback type="invalid">
@@ -269,21 +268,23 @@ function IssuanceCardForm() {
                     </Col>
                   </Row>
                   <Row>
-                    <Col className="pr-1" md="6">
+                    <Col sm="12" md="6">
                       <Form.Group>
                         <label>Number Of Months</label>
                         <Form.Control
                           as="select"
                           value={PaybackPeriod}
                           name="PaybackPeriod"
-                          onChange={e => {
-                            handleInputChange(e)
+                          onChange={(e) => {
+                            handleInputChange(e);
                           }}
                         >
                           {allPaybackPeriodsOfCurrentMerchant.map((item) => {
                             return (
-                              <option value={item.id}>{item.NumberOfMonths}</option>
-                            )
+                              <option value={item.id}>
+                                {item.NumberOfMonths}
+                              </option>
+                            );
                           })}
                         </Form.Control>
                         <Form.Control.Feedback type="invalid">
@@ -291,7 +292,7 @@ function IssuanceCardForm() {
                         </Form.Control.Feedback>
                       </Form.Group>
                     </Col>
-                    <Col md="6">
+                    <Col sm="12" md="6">
                       <Form.Group>
                         <label>Merchant Details</label>
 
@@ -299,14 +300,12 @@ function IssuanceCardForm() {
                           as="select"
                           value={Merchants_id}
                           name="Merchants_id"
-                          onChange={e => {
-                            handleInputChange(e)
+                          onChange={(e) => {
+                            handleInputChange(e);
                           }}
                         >
                           {allMerchants.map((item) => {
-                            return (
-                              <option value={item.id}>{item.Name}</option>
-                            )
+                            return <option value={item.id}>{item.Name}</option>;
                           })}
                         </Form.Control>
 
@@ -316,24 +315,26 @@ function IssuanceCardForm() {
                       </Form.Group>
                     </Col>
                   </Row>
-                  
+
                   <Row className="text-center mt-2">
                     <Col md="12">
-                      <Button
-                        className="btn-fill mr-3"
-                        type="submit"
-                        style={{
-                          backgroundColor: "#3AAB7B",
-                          border: "2px solid #3AAB7B",
-                        }}
-                      >
-                        Save
-                      </Button>
-                      {/* <Link to="/admin/????">
-                          <Button className="btn-fill" variant="danger">
+                      <div className="button-wrapper">
+                        <Button
+                          className="btn-fill res-size"
+                          type="submit"
+                          style={{
+                            backgroundColor: "#3AAB7B",
+                            border: "none",
+                          }}
+                        >
+                          Save
+                        </Button>
+                        {/* <Link to="/admin/????">
+                          <Button className="btn-fill res-size" variant="danger">
                             Back
                           </Button>
                         </Link> */}
+                      </div>
                     </Col>
                   </Row>
                   <div className="clearfix"></div>

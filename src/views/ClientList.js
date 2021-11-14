@@ -20,6 +20,7 @@ import { login } from "services/auth";
 import getClientList from "services/client";
 import { deleteClient } from "services/client";
 import { updateClient } from "services/client";
+import "../components/Dashboard.css"
 
 function ClientList() {
   const [tableData, setTableData] = React.useState([{
@@ -136,71 +137,80 @@ function ClientList() {
           <Col md="12">
             <Card className="card-plain table-plain-bg">
               <Card.Header>
-                <Card.Title as="h3">LISTA di Kliente</Card.Title>
+                <Card.Title as="h3" className="heading">
+                  LISTA di Kliente
+                </Card.Title>
               </Card.Header>
               <Card.Body className="table-full-width table-responsive px-0">
-                <Button
-                  className="btn-fill ml-3 mr-3"
-                  type="submit"
-                  style={{
-                    backgroundColor: "#3AAB7B",
-                    border: "1px solid #3AAB7B",
-                  }}
-                  onClick={() => history.push("/admin/ClientForm")}
-                >
-                  ADD
-                </Button>
-                <Button
-                  className="btn-fill  mr-3"
-                  type="submit"
-                  variant="info"
-                  onClick={() => {
-                    setTableData(
-                      tableData.map((item) => {
-                        if (item.Checked === true) {
-                          item.Status = true;
-                          updateClient(item)
-                            .then(function (response) {
-                              console.log(response)
-                            })
-                            .catch(function (error) {
-                              console.log(error)
-                            })
-                          item.Checked = false;
-                        }
-                        return item;
-                      })
-                    );
-                  }}
-                >
-                  Active
-                </Button>
-                <Button
-                  className="btn-fill"
-                  type="submit"
-                  variant="danger"
-                  onClick={() => {
-                    setTableData(
-                      tableData.map((item) => {
-                        if (item.Checked === true) {
-                          item.Status = false;
-                          updateClient(item)
-                            .then(function (response) {
-                              console.log(response)
-                            })
-                            .catch(function (error) {
-                              console.log(error)
-                            })
-                          item.Checked = false;
-                        }
-                        return item;
-                      })
-                    );
-                  }}
-                >
-                  Block
-                </Button>
-                <br />
+                <div className="top-btn-wrapper">
+                  <Button
+                    className="btn-fill res-size"
+                    type="submit"
+                    style={{
+                      backgroundColor: "#3AAB7B",
+                      border: "none",
+                    }}
+                    onClick={() => history.push("/admin/ClientForm")}
+                  >
+                    ADD
+                  </Button>
+                  <Button
+                    className="btn-fill res-size"
+                    type="submit"
+                    variant="info"
+                    style={{
+                      border: "none",
+                    }}
+                    onClick={() => {
+                      setTableData(
+                        tableData.map((item) => {
+                          if (item.Checked === true) {
+                            item.Status = true;
+                            updateClient(item)
+                              .then(function (response) {
+                                console.log(response);
+                              })
+                              .catch(function (error) {
+                                console.log(error);
+                              });
+                            item.Checked = false;
+                          }
+                          return item;
+                        })
+                      );
+                    }}
+                  >
+                    Active
+                  </Button>
+                  <Button
+                    className="btn-fill res-size"
+                    type="submit"
+                    variant="danger"
+                    style={{
+                      border: "none",
+                    }}
+                    onClick={() => {
+                      setTableData(
+                        tableData.map((item) => {
+                          if (item.Checked === true) {
+                            item.Status = false;
+                            updateClient(item)
+                              .then(function (response) {
+                                console.log(response);
+                              })
+                              .catch(function (error) {
+                                console.log(error);
+                              });
+                            item.Checked = false;
+                          }
+                          return item;
+                        })
+                      );
+                    }}
+                  >
+                    Block
+                  </Button>
+                </div>
                 <Col md="4">
                   <Form.Group>
                     <Form.Control
@@ -211,7 +221,7 @@ function ClientList() {
                     ></Form.Control>
                   </Form.Group>
                 </Col>
-                <Table className="table-hover">
+                <Table className="table-hover" responsive>
                   <thead>
                     <tr>
                       <th className="border-0"> st </th>
@@ -235,7 +245,14 @@ function ClientList() {
                         return;
                       }
                       return (
-                        <tr key={index} style={item.Status == 2 ?{backgroundColor : "#7FB5A2"} : null}>
+                        <tr
+                          key={index}
+                          style={
+                            item.Status == 2
+                              ? { backgroundColor: "#7FB5A2" }
+                              : null
+                          }
+                        >
                           <td>
                             {" "}
                             <Form.Control
@@ -270,15 +287,17 @@ function ClientList() {
                                   }}
                                 />
                               </Button>
-                            ) : item.Status == 2 ? <Button onClick={() => toggleStatus(index)}>
-                              <i
-                                className="fa fa-hourglass"
-                                style={{
-                                  color: "black",
-                                  textAlign: "center",
-                                }}
-                              />
-                            </Button> : (
+                            ) : item.Status == 2 ? (
+                              <Button onClick={() => toggleStatus(index)}>
+                                <i
+                                  className="fa fa-hourglass"
+                                  style={{
+                                    color: "black",
+                                    textAlign: "center",
+                                  }}
+                                />
+                              </Button>
+                            ) : (
                               <Button onClick={() => toggleStatus(index)}>
                                 <i
                                   className="fa fa-ban"

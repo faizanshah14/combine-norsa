@@ -12,11 +12,11 @@ import {
 import { useHistory, Link } from "react-router-dom";
 import { useEffect } from "react";
 import { getNfcSingleData } from "services/nfc";
-import "../components/Dashboard.css";
 import { updateNfc } from "services/nfc";
 import getNfcData from "services/nfc";
 import { addNfc } from "services/nfc";
 import _uniqueId from "lodash/uniqueId";
+import "../components/Dashboard.css";
 
 function addNfcCard() {
   const history = useHistory();
@@ -118,17 +118,17 @@ function addNfcCard() {
     <>
       <Container>
         <Row className="justify-content-center">
-          <Col md="8">
+          <Col sm="12" md="8">
             <Card className="form-wrapper mt-4">
               <Card.Header style={{ backgroundColor: "#F7F7F8" }}>
-                <Card.Title as="h3" className="text-center m-3">
+                <Card.Title as="h3" className="text-center m-3 heading">
                   NFC Card
                 </Card.Title>
               </Card.Header>
               <Card.Body>
                 <Form onSubmit={handleSubmit}>
                   <Row>
-                    <Col md="12">
+                    <Col sm="12" md="12">
                       <Form.Group>
                         <label>Nomber</label>
                         <Form.Control
@@ -146,39 +146,48 @@ function addNfcCard() {
                     </Col>
                   </Row>
                   <Row>
-                    <Col className="pr-1 d-flex" md="12">
-                      <label className="mr-5 mt-1">Status</label>
-                      <Form.Check
-                        inline
-                        label="Active"
-                        name="group1"
-                        type="Radio"
-                        className="mr-5"
-                        name="status"
-                        checked={status}
-                        onClick={(e) => {
-                          handleInputChange(e);
-                        }}
-                      />
+                    <Col sm="12">
+                      <div className="radio-wrapper">
+                        <label className="mt-1">Status</label>
+                        <Form.Check
+                          inline
+                          label="Active"
+                          name="group1"
+                          type="Radio"
+                          name="status"
+                          checked={status}
+                          onClick={(e) => {
+                            handleInputChange(e);
+                          }}
+                        />
+                      </div>
                     </Col>
                   </Row>
-                  <Row className="text-center mt-2">
+                  <Row className="text-center mt-3">
                     <Col md="12">
-                      <Button
-                        className="btn-fill mr-3"
-                        type="submit"
-                        style={{
-                          backgroundColor: "#3AAB7B",
-                          border: "2px solid #3AAB7B",
-                        }}
-                      >
-                        Save
-                      </Button>
-                      <Link to="/admin/nfccard">
-                        <Button className="btn-fill" variant="danger">
-                          Back
+                      <div className="button-wrapper">
+                        <Button
+                          className="btn-fill res-size"
+                          type="submit"
+                          style={{
+                            backgroundColor: "#3AAB7B",
+                            border: "none",
+                          }}
+                        >
+                          Save
                         </Button>
-                      </Link>
+                        <Link to="/admin/nfccard">
+                          <Button
+                            className="btn-fill res-size"
+                            variant="danger"
+                            style={{
+                              border: "none",
+                            }}
+                          >
+                            Back
+                          </Button>
+                        </Link>
+                      </div>
                     </Col>
                   </Row>
 
