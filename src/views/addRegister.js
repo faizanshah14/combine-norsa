@@ -102,13 +102,19 @@ const addRegister = () => {
                         type="submit"
                         style={{
                           backgroundColor: "#3AAB7B",
-                          border: "2px solid #3AAB7B",
+                          border: "none",
                         }}
                       >
                         Save
                       </Button>
                       <Link to="/admin/register">
-                        <Button className="btn-fill res-size" variant="danger">
+                        <Button
+                          className="btn-fill res-size"
+                          variant="danger"
+                          style={{
+                            border: "none",
+                          }}
+                        >
                           Back
                         </Button>
                       </Link>

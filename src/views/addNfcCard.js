@@ -171,7 +171,7 @@ function addNfcCard() {
                           type="submit"
                           style={{
                             backgroundColor: "#3AAB7B",
-                            border: "2px solid #3AAB7B",
+                            border: "none",
                           }}
                         >
                           Save
@@ -180,6 +180,9 @@ function addNfcCard() {
                           <Button
                             className="btn-fill res-size"
                             variant="danger"
+                            style={{
+                              border: "none",
+                            }}
                           >
                             Back
                           </Button>

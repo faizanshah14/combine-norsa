@@ -52,6 +52,11 @@
   gap: 40px;
 }
 
+
+  .res-size {
+    font-size: 14px !important;
+  }
+
 @media screen and (max-width: 768px) {
   
   .heading {
@@ -60,10 +65,6 @@
 
   .client-heading {
     font-size: 20px;
-  }
-
-  .res-size {
-    font-size: 14px !important;
   }
 }
 

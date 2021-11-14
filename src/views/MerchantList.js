@@ -149,7 +149,7 @@ function MerchantList() {
                   type="submit"
                   style={{
                     backgroundColor: "#3AAB7B",
-                    border: "1px solid #3AAB7B",
+                    border: "none",
                   }}
                   onClick={() => history.push("/admin/MerchantForm")}
                 >
