@@ -52,6 +52,21 @@
   gap: 40px;
 }
 
+@media screen and (max-width: 768px) {
+  
+  .heading {
+    font-size: 22px;
+  }
+
+  .client-heading {
+    font-size: 20px;
+  }
+
+  .res-size {
+    font-size: 14px !important;
+  }
+}
+
 @media screen and (max-width: 500px) {
   .button-wrapper {
     margin-top: 30px;
@@ -63,13 +78,7 @@
     align-items: flex-start;
   }
 
-  .heading {
-    font-size: 24px;
-  }
-}
-
-@media screen and (max-width: 350px) {
-  .top-btn-wrapper {
+    .top-btn-wrapper {
     flex-direction: column;
     align-items: flex-start;
   }
@@ -85,3 +94,4 @@
     font-size: 12px !important;
   }
 }
+
