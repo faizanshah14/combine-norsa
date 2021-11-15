@@ -62,6 +62,7 @@ function ClientForm() {
     const params = queryParams.get("id");
     if (params != null) {
       setClientID(params);
+    } else {
       setFileId(uniqueID);
     }
     getActiveClientList().
