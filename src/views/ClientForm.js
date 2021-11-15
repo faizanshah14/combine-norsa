@@ -530,7 +530,7 @@ function ClientForm() {
                   <Row>
                     <Col md="12">
                       <Form.Group>
-                        <label>Address</label>
+                        <label>Adrès</label>
                         <Form.Control
                           required
                           placeholder="address"
