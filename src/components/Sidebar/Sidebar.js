@@ -48,7 +48,7 @@ function Sidebar({ color, image, routes }) {
             </div>
           </a>
           <a className="simple-text mt-1" href="#">
-            Norsan.v.
+            Norsa n.v.
           </a>
         </div>
         <Nav>

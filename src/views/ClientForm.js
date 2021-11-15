@@ -13,6 +13,7 @@ import {
   Col,
 } from "react-bootstrap";
 import { useHistory, Link } from "react-router-dom";
+import serverAddress from 'services/address'
 import { useEffect } from "react";
 import { getClientData } from "services/client";
 import "../components/Dashboard.css";
@@ -23,6 +24,8 @@ import _uniqueId from 'lodash/uniqueId';
 import { getActiveClientList } from "services/client";
 import { getNextId } from "services/client";
 import { getNextDId } from "services/client";
+import { getImageByClientId } from "services/client";
+import { addClientImage } from "services/client";
 
 
 function ClientForm() {
@@ -34,10 +37,12 @@ function ClientForm() {
   const [dealers, setDealers] = React.useState([])
   const [typeOfClient, setTypeOfClient] = React.useState()
   const [file, setFile] = React.useState()
+  const [fileId, setFileId] = React.useState(null)
   const [formData, setFormData] = React.useState({
     id: "",
     Date: "2021-01-01",
     Code: "",
+    address: "",
     FirstName: "",
     LastName: "",
     idCard: "",
@@ -57,6 +62,7 @@ function ClientForm() {
     const params = queryParams.get("id");
     if (params != null) {
       setClientID(params);
+      setFileId(uniqueID);
     }
     getActiveClientList().
       then(function (response) {
@@ -67,7 +73,6 @@ function ClientForm() {
       .catch(function (error) {
         console.log(error);
       })
-
   }, []);
   useEffect(() => {
     if (typeOfClient == 0) {
@@ -83,7 +88,8 @@ function ClientForm() {
       // }).catch(function (error) {
       //   console.log(error)
       // })
-      setFormData({ ...formData, ["id"]: "D-", ["Code"]: "D-" })
+
+      setFormData({ ...formData, ["id"]: "D-", ["Code"]: "D-", ["Status"]: 1 })
 
     }
   }, [typeOfClient])
@@ -92,14 +98,22 @@ function ClientForm() {
     if (ClientID == null) return
     getClientData(ClientID)
       .then(function (response) {
-        console.log(response);
+        getImageByClientId(response.data.id).then(
+          function (resp) {
+            alert("fetched")
+            setFileId(resp.data.id)
+            setFile(serverAddress + '/static/images/' + resp.data.filePath)
+          }
+        ).catch(
+          function (error) {
+            console.log(error)
+          }
+        )
         setFormData(response.data)
       })
       .catch(function (error) {
         console.log("cannot fetch the data with an " + error);
       });
-
-
   }, [ClientID]);
   const {
     id,
@@ -111,6 +125,7 @@ function ClientForm() {
     ContactNo,
     WorksAt,
     Email,
+    address,
     FaxNumber,
     Status,
     MaxBorrowAmount,
@@ -143,15 +158,14 @@ function ClientForm() {
       }
       return "only numbers or spaces";
     }
-
     return true;
   };
 
   const handleFileSubmit = () => {
-    console.log(file)
+
     const data = new FormData();
     data.append("file", file);
-    data.append("id", uniqueID);
+    data.append("id", fileId);
     data.append('Client_id', formData.id);
     return addClientImage(data)
   }
@@ -189,6 +203,7 @@ function ClientForm() {
     }
     return "not a valid email";
   };
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const valid = validateEmail(Email);
@@ -198,15 +213,6 @@ function ClientForm() {
     }
     if (ClientID) {
       updateClient(formData)
-        .then(function (response) {
-          console.log(response)
-        })
-        .catch(function (error) {
-          console.log(error)
-        })
-    }
-    else {
-      addClient(formData)
         .then(function (response) {
           console.log(response)
           handleFileSubmit()
@@ -220,8 +226,54 @@ function ClientForm() {
           console.log(error)
         })
     }
+    else {
+      if (typeOfClient == 1) {
+        getClientData(formData.id)
+          .then(function (response) {
+            if (response.data) {
+              alert("Dealer already Exist")
+              return
+            }
+            else {
+              addClient(formData)
+                .then(function (response) {
+                  console.log(response)
+                  handleFileSubmit()
+                    .then(function (response) {
+                      alert("submitted")
+                    }).catch(function (error) {
+                      console.log(error)
+                    })
+                })
+                .catch(function (error) {
+                  console.log(error)
+                })
+              history.push("/admin/ClientList");
+            }
+          })
+          .catch(function (error) {
 
-    history.push("/admin/ClientList");
+          })
+      }
+      else {
+        addClient(formData)
+          .then(function (response) {
+            console.log(response)
+            handleFileSubmit()
+              .then(function (response) {
+                alert("submitted")
+              }).catch(function (error) {
+                console.log(error)
+              })
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
+        history.push("/admin/ClientList");
+      }
+    }
+
+
 
   };
   const handleFileChange = (event) => {
@@ -476,6 +528,24 @@ function ClientForm() {
                   <Row>
                     <Col md="12">
                       <Form.Group>
+                        <label>Address</label>
+                        <Form.Control
+                          required
+                          placeholder="address"
+                          type="text"
+                          value={address}
+                          name="address"
+                          onChange={(e) => handleInputChange(e)}
+                        ></Form.Control>
+                        <Form.Control.Feedback type="invalid">
+                          Please provide a value.
+                        </Form.Control.Feedback>
+                      </Form.Group>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col md="12">
+                      <Form.Group>
                         <label>Si bo no ta empleá, kiko ta bo medio di entrada ?</label>
                         <Form.Control
                           as="textarea"
@@ -554,12 +624,12 @@ function ClientForm() {
                       </Form.Group>
                     </Col>
                   </Row>}
-                  <Row>
+                  {!ClientID && <Row>
                     <Col md="12">
                       <Form.Group>
                         <label>Porfabor agrega un potrét di bo Sédula</label>
                         <Form.Control
-
+                          required
                           type="file"
                           name="profilePicture"
                           onChange={(e) => { handleFileChange(e) }}
@@ -570,10 +640,11 @@ function ClientForm() {
                         </Form.Control.Feedback>
                       </Form.Group>
                     </Col>
-                  </Row>
+                  </Row>}
                   {file && <Row>
                     <Col md="12">
-                      <img src={URL.createObjectURL(file)}/>
+                      {/* <img src={URL.createObjectURL(file)} style={{ width: "100%", maxWidth: "150px" }} /> */}
+                      <img src={fileId ? file : URL.createObjectURL(file)} style={{ width: "100%", maxWidth: "150px" }} />
                     </Col>
                   </Row>}
 

@@ -49,7 +49,18 @@ export function getClientData(id) {
         }
     })
 }
+export function getImageByClientId(id) {
+    console.log("hh" + id)
+    const token = getToken()
+    if (!token) return "Authentication Fail Sign In agian"
 
+    return axios.get(address + '/api/clientProfilePicture/getImageByClientId/' + id, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+        }
+    })
+}
 export function updateClient(formData) {
     console.log(formData)
     const token = getToken()
@@ -84,6 +95,17 @@ export function deleteClient(id) {
     return axios.delete(address + '/api/clients/deleteClient/' + id, {
         headers: {
             'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+        }
+    })
+}
+
+export function addClientImage(formData) {
+    const token = getToken()
+    if (!token) return "Authentication Fail Sign In agian"
+    return axios.post(address + '/api/clientProfilePicture/createImage', formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
             'Authorization': 'Bearer ' + token
         }
     })
