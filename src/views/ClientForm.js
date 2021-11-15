@@ -646,7 +646,7 @@ function ClientForm() {
                   {file && <Row>
                     <Col md="12">
                       {/* <img src={URL.createObjectURL(file)} style={{ width: "100%", maxWidth: "150px" }} /> */}
-                      <img src={fileId ? file : URL.createObjectURL(file)} style={{ width: "100%", maxWidth: "150px" }} />
+                      <img src={ClientID ? file : URL.createObjectURL(file)} style={{ width: "100%", maxWidth: "150px" }} />
                     </Col>
                   </Row>}
 
